@@ -5,13 +5,12 @@ clear; clc;
 
 %Controller is designed using nSimulations parallel simulations
 nSimulations = 100;
-IC = [1.2*(0.5-rand(1,nSimulations));  %Random initial angle
-    0.7*(0.5-rand(1,nSimulations))];  %Random initial rate
-
+IC = [3.0*(0.5-rand(1,nSimulations));  %Random initial angle
+    2*(0.5-rand(1,nSimulations))];  %Random initial rate
 %The controller is tested using a different set of initial states
 nTest = 10;
-Test_IC = [1.2*(0.5-rand(1,nTest));  %Random initial angle
-    0.7*(0.5-rand(1,nTest))];  %Random initial rate
+Test_IC = [3*(0.5-rand(1,nTest));  %Random initial angle
+    2*(0.5-rand(1,nTest))];  %Random initial rate
 
 fitfun = 'objective';
 xstart = [0;0;0];   %Initial guess at the parameters
