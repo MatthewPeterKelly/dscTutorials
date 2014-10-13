@@ -1,0 +1,13 @@
+# TexMaker autogen files:
+*.aux
+*.bbl
+*.blg
+*.log
+*.synctex.gz
+*.tks
+*.*~
+
+# Matlab automatically generated mex files:
+codegen/
+*.mex*
+

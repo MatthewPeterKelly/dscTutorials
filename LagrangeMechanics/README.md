@@ -1,14 +1,18 @@
-# README  --  Lagrance Mechanics
+## README  --  Lagrange Mechanics
 
 This directory contains matlab code for deriving the equations of motion of a few standard (conservative) mechanical systems. 
 
+
+### Derive Equations of Motion:
 For each system there is a script to derive the equations of motion. This script is titled: 
 EoM_System_Name.m  
 
+### Automatically generated files:
 The equation of motion script will automatically generate dynamics and energy functions for this sytem: 
 systemNameDynamics.m
 systemNameEnergy.m
 
+### Entry Point Script:
 There is a simulation driver script for each system as well, titled:
 MAIN_systemName.m
 
