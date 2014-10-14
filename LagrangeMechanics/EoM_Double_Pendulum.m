@@ -141,34 +141,11 @@ M = jacobian(EoM,ddq);
 
 f = subs(EoM,ddq,sym([0, 0]));
 
-% Now, we have a linear equation, which can be solved for ddq:
-
-ddq_soln = -M\f;
-ddq_soln = simplify(ddq_soln);
-
-
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 %                               write files                               %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
-% Write dynamics function:
-filename = 'doublePendulumDynamics.m';
-matlabFunction(ddq_soln(1),ddq_soln(2),'file',filename,...
-    'vars',{th1 th2 dth1 dth2 m1 m2 g l1  I1 I2 d1 d2},...
-    'output',{'ddth1' 'ddth2'});
-
-% Write energy function:
-filename = 'doublePendulumEnergy.m';
-totalEnergy = T+U;
-energy = [totalEnergy;T;U];
-matlabFunction(totalEnergy,T,U,'file',filename,...
-    'vars',{th1 th2 dth1 dth2 m1 m2 g l1 l2 I1 I2 d1 d2},...
-    'output',{'energy','kinetic','potential'});
-
-% Write position function:
-filename = 'doublePendulumPosition.m';
-matlabFunction(p1,p2,'file',filename,...
-    'vars',{th1 th2 l1 l2},...
-    'output',{'p1','p2'});
-
+writeDoublePendulumDynamics(f,M);
+writeDoublePendulumEnergy(T,U);
+writeDoublePendulumPosition(p1,p2,g1,g2);

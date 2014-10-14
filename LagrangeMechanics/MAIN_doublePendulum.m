@@ -4,25 +4,28 @@
 
 % Use: EoM_Double_Pendulum to write the equations of motion
 
+clear; clc;
+
 %Physical parameters:
-m1 = 1.0;  % (kg) pendulum mass, link 1
-m2 = 1.0;  % (kg) pendulum mass, link 2
-g = 9.81; % (m/s^2) gravity
-l1 = 1.0; % (m) link 1 length
-l2 = 1.0; % (m) link 2 length
-d1 = 0.5*l1; % Distance from parent joint to link CoM
-d2 = 0.5*l2; % Distance from parent joint to link CoM
-I1 = m1*l1*l1/12; %Link 1, moment of inertia
-I2 = m2*l2*l2/12; %Link 2, moment of inertia
+P.m1 = 4.0;  % (kg) pendulum mass, link 1
+P.m2 = 1.0;  % (kg) pendulum mass, link 2
+P.g = 9.81; % (m/s^2) gravity
+P.l1 = 1.0; % (m) link 1 length
+P.l2 = 2.0; % (m) link 2 length
+P.d1 = 0.6*P.l1; % Distance from parent joint to link CoM
+P.d2 = 0.3*P.l2; % Distance from parent joint to link CoM
+P.I1 = P.m1*P.l1^2/12; %Link 1, moment of inertia
+P.I2 = P.m2*P.l2^2/12; %Link 2, moment of inertia
 
 tSpan = [0,10]; %Simulation time interval
 
+z0 = zeros(4,1);
 z0(1) = (pi/180)*(0);  % Link 1, initial abs angle
 z0(2) = 0;  % Link 1, initial abs angle rate
 z0(3) = (pi/180)*(0);  % Link 1, initial abs angle
 z0(4) = 0;  % Link 1, initial abs angle rate
 
-userFunc = @(t,z)doublePendulumRhs(t,z,m1,m2,g,l1,I1,I2,d1,d2);
+userFunc = @(t,z)doublePendulumDynamics(t,z,P);
 
 options = odeset(...
     'AbsTol',1e-6,...
@@ -40,8 +43,7 @@ th1 = z(1,:);
 w1 = z(2,:);
 th2 = z(3,:);
 w2 = z(4,:);
-[energy, kinetic, potential] = doublePendulumEnergy(th1,th2,w1,w2,...
-    m1,m2,g,l1,l2,I1,I2,d1,d2);
+[energy, kinetic, potential] = doublePendulumEnergy(z,P);
 
 % Plotting!
 
@@ -70,5 +72,5 @@ legend('total','kinetic','potential');
 
 % Animation
 figure(3333); clf;
-doublePendulumAnimate(sol,l1,l2);
+doublePendulumAnimate(sol,P);
 
