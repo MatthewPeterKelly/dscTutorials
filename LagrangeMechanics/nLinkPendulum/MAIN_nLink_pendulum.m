@@ -4,20 +4,22 @@
 
 clear; clc;
 
-N = 7; 
+N = 3; 
 overwrite = false;
 EoM_nLink_pendulum(N,overwrite);
 
 %Physical parameters:
 P.g = 1.0;
-P.m = 1.0*ones(N,1);
-P.l = 1.0*ones(N,1);
+P.m = 1.0*ones(N,1) + 1.5*rand(N,1);
+P.l = 1.0*ones(N,1) + 0.4*rand(N,1);
 P.I = (1/12)*P.m.*P.l.^2;
-P.d = 0.5*P.l;
+P.d = P.l.*(0.25 + 0.5*rand(N,1));
 
-tSpan = [0,10]; %Simulation time interval
+tSpan = [0,20]; %Simulation time interval
 
-z0 = zeros(2*N,1); %Simulation starts horizontally
+th0 = (pi/180)*(5 + 15*rand(N,1));
+dth0 = zeros(N,1);
+z0 = [th0;dth0];
 
 userFunc = eval(['@(t,z)dynamics_' num2str(N) '_link(t,z,P);']);
 
@@ -60,7 +62,7 @@ xlabel('time (s)')
 ylabel('energy (J)');
 legend('total','kinetic','potential');
 
-% % % Animation
-% % figure(3333); clf;
-% % doublePendulumAnimate(sol,P);
+% Animation
+figure(3333); clf;
+nLinkAnimate(sol,P);
 
