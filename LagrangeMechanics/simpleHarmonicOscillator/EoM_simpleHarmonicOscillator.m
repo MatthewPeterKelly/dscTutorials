@@ -39,8 +39,8 @@ syms m k 'real';
 % m == (point) mass of the pendulum bob
 % k == spring constant
 
-T = (1/2)*m*v*v;  % kinetic energy of the pendulum
-U = k*x*x/2;  % potential energy of the pendulum
+T = (1/2)*m*v^2;  % kinetic energy of the pendulum
+U = (1/2)*k*x^2;  % potential energy of the pendulum
 L = T - U;  % lagrangian
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%

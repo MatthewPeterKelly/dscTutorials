@@ -77,6 +77,8 @@ fprintf(fid,['g2(2,:) = ' vectorize(char(g2(2))) ';\n']);
 fprintf(fid,'\n');
 fprintf(fid,'end \n');
 
+fclose(fid);
+
 end
 
 
