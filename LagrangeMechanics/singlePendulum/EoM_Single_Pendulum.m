@@ -40,7 +40,7 @@ syms m g l 'real';
 % g == acceleration due to gravity
 % l == length of the pendulum
 
-T = (1/2)*m*l*l*w*w;  % kinetic energy of the pendulum
+T = (1/2)*m*(l^2)*(w^2);  % kinetic energy of the pendulum
 U = m*g*l*(1-cos(th));  % potential energy of the pendulum
 L = T - U;  % lagrangian
 

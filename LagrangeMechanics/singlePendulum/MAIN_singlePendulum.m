@@ -10,7 +10,7 @@ l = 1.0; % (m) pendulum length
 
 tSpan = [0,10]; %Simulation time interval
 
-th0 = (pi/180)*(-160);  %Initial angle
+th0 = (pi/180)*(-178);  %Initial angle
 w0 = 0;  %Initial angular rate
 z0 = [th0;w0];
 

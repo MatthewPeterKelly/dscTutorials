@@ -1,11 +1,7 @@
-%EoM_Single_Pendulum.m
+%EoM_SimpleHarmonicOscillator.m
 
-% This script derives the equations of motion for a single pendulum using
-% the lagrange equations and the matlab symbolic toolbox.
-
-% Model: Single Pendulum, with a point mass bob. Theta is measured from the
-% -j axis. Gravity points in the -j direction. The pendulum is a fixed
-% length, and there is no friction.
+% This script derives the equations of motion for a simple harmonic oscillator
+% using the lagrange equations and the matlab symbolic toolbox.
 
 % The lagrangian (L) is defined as:
 % 

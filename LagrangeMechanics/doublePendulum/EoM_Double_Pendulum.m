@@ -1,4 +1,4 @@
-%EoM_Single_Pendulum.m
+%EoM_Double_Pendulum.m
 
 % This script derives the equations of motion for a double pendulum using
 % the lagrange equations and the matlab symbolic toolbox.

@@ -1,10 +1,10 @@
-%MAIN_singlePendulum.m
+%MAIN_simpleHarmonicOscillator.m
 %
-% This script runs a simple simulation of a single pendulum
+% This script runs a simulation of a simple harmonic oscillator
 
 % Use: EoM_Single_Pendulum to write the equations of motion
 
-m = 1.0;  % (kg) pendulum mass
+m = 1.0;  % (kg)  mass
 k = 1.0;  % (N/m) spring constant
 
 tSpan = [0,10]; %Simulation time interval

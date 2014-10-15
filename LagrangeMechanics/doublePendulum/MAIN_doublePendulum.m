@@ -13,7 +13,7 @@ P.g = 9.81; % (m/s^2) gravity
 P.l1 = 1.0; % (m) link 1 length
 P.l2 = 2.0; % (m) link 2 length
 P.d1 = 0.6*P.l1; % Distance from parent joint to link CoM
-P.d2 = 0.3*P.l2; % Distance from parent joint to link CoM
+P.d2 = 0.4*P.l2; % Distance from parent joint to link CoM
 P.I1 = P.m1*P.l1^2/12; %Link 1, moment of inertia
 P.I2 = P.m2*P.l2^2/12; %Link 2, moment of inertia
 
