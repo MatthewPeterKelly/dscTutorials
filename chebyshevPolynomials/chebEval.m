@@ -73,7 +73,7 @@ y = zeros(k,m);
 for i=1:m
     if t(i)<d(1), t(i) = d(1);  %Input Checking and clamping
     elseif t(i)>d(2), t(i) = d(2); end;
-    num = 0; den = 0;
+    num = zeros(k,1); den = 0;
     for j=1:n  %Loop over each chebyshev node:
         dist = t(i) - x(j);
         if abs(dist) < 10*eps
