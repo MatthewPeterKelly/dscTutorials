@@ -11,3 +11,7 @@
 codegen/
 *.mex*
 
+#GPOPS2 automatically generated info files:
+*IPOPTinfo.txt
+*SNOPTinfo.txt
+
