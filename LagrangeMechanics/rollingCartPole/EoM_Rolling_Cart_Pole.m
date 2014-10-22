@@ -13,8 +13,9 @@ syms phi dphi ddphi th dth ddth 'real';
 % phi == angle of th disk
 % th == angle of the point-mass pendulum
 
-syms m I g r l 'real';
-% m == mass of the pendulum bob
+syms m1 m2 I g r l 'real';
+% m1 == mass of the disk
+% m2 == mass of the bob
 % I = moment of inertia of the disk
 % r = radius of the disk
 % g == acceleration due to gravity
@@ -55,12 +56,12 @@ ddp2 = ddp1 + l*dde;
 
 %Angular momentum about the rolling contact point:
 sumTorque = cross(r*j,-T*e);
-sumMomentum = I*ddphi*k;
+sumMomentum = I*ddphi*k + cross(r*j,m1*ddp2);
 eqn1 = dot(k,sumTorque-sumMomentum);
 
 %Linear momentum for the pendulum bob:
-sumForces = T*e - m*g*j;
-Accel = m*ddp2;
+sumForces = T*e - m2*g*j;
+Accel = m2*ddp2;
 eqn2 = simplify(dot(e,sumForces-Accel));
 eqn3 = simplify(dot(n,sumForces-Accel));
 
