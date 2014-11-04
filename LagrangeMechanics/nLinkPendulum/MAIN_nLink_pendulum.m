@@ -15,13 +15,14 @@ P.l = 1.0*ones(N,1) + 0.4*rand(N,1);
 P.I = (1/12)*P.m.*P.l.^2;
 P.d = P.l.*(0.25 + 0.5*rand(N,1));
 
-tSpan = [0,20]; %Simulation time interval
+tSpan = [0,4]; %Simulation time interval
 
 th0 = (pi/180)*(5 + 15*rand(N,1));
 dth0 = zeros(N,1);
 z0 = [th0;dth0];
 
 userFunc = eval(['@(t,z)dynamics_' num2str(N) '_link(t,z,P);']);
+% % userFunc = eval(['@(t,z)dynamics_' num2str(N) '_link_mex(t,z,P);']);
 
 options = odeset(...
     'AbsTol',1e-6,...
@@ -29,7 +30,10 @@ options = odeset(...
     'Vectorized','on');
 
 % Run the simulation!
+tic
 sol = ode45(userFunc,tSpan,z0,options);
+toc
+
 
 % Break apart solution for plotting
 nPlot = 1000;

@@ -147,12 +147,12 @@ else  %Then go ahead and do lots of math
     %
     % Thus, we can find M(q,dq) by using the jacobian command:
     
-    M = jacobian(EoM,ddq);
+    M = simplify(jacobian(EoM,ddq));
     
     % Now, we want to find f(q,dq). We can do this by substituting in zero for
     % the acceleration vector (dqq)
     
-    f = subs(EoM,ddq,zeros(size(ddq)));
+    f = simplify(subs(EoM,ddq,zeros(size(ddq))));
     
     
     %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
