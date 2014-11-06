@@ -53,11 +53,22 @@ M = jacobian(EoM,[ddr; ddth]);
 f = subs(EoM,[ddr; ddth],sym([0; 0]));
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-%                            Write Files                                  %
+%                   Write Dynamics function                               %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 accel = simplify(-M\f);
 write_dynamics(accel)
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%                       Energy Stuff                                      %
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+
+energy = simplify(m*g*dot(p,j) + 0.5*m*dot(dp,dp));
+energyRate = simplify(m*g*dot(dp,j) + m*dot(ddp,dp));
+
+%Get rid of acceleration terms in energyRate:
+energyRate = simplify(subs(energyRate,ddr,accel(1)));
+energyRate = simplify(subs(energyRate,ddth,accel(2)));
 
 
 

@@ -9,6 +9,7 @@ P.g = 9.81;
 P.l = 1;
 P.freq = 3*sqrt(P.g/P.l);   %Response frequence in controller
 P.damp = 1.0;   %Damping ratio in controller
+P.eNom = 2.5*P.m*P.g*P.l;
 
 % z = [r; th; dr; dth];
 
