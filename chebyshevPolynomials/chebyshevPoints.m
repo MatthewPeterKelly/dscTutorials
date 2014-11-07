@@ -1,4 +1,5 @@
 function [x, w] = chebyshevPoints(n,d)
+%[x, w] = chebyshevPoints(n,d)
 %
 % This function is a light-weight version of the function: chebpts.m
 % written by Lloyd Trefethen as part of his Chebyshev Polynomial matlab

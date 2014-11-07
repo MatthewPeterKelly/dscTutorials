@@ -1,4 +1,5 @@
 function y = chebEval(f,t,d)
+% function y = chebEval(f,t,d)
 %
 % This is a stripped-down version of chebyshevInterpolate, and is designed
 % to only be called as a mex function.
