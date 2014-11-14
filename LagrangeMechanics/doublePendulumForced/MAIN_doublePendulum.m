@@ -20,9 +20,9 @@ P.I2 = P.m2*P.l2^2/12; %Link 2, moment of inertia
 tSpan = [0,10]; %Simulation time interval
 
 z0 = zeros(4,1);
-z0(1) = (pi/180)*(0);  % Link 1, initial abs angle
+z0(1) = (pi/180)*(-90);  % Link 1, initial abs angle
 z0(2) = 0;  % Link 1, initial abs angle rate
-z0(3) = (pi/180)*(0);  % Link 1, initial abs angle
+z0(3) = (pi/180)*(-90);  % Link 1, initial abs angle
 z0(4) = 0;  % Link 1, initial abs angle rate
 
 u = [0;0];

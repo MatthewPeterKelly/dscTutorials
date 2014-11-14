@@ -26,7 +26,7 @@ function y = chebEval(f,t,d)
 %       represents a single set of chebyshev node values for a single
 %       state.
 %   t = [1xM] vector of inputs to be evaluated (monotonically increasing)
-%   d = [1x2] vector speficying the domain of the polynomial
+%   d = [1x2] vector speficying the domain of the polynomial. d(2) > d(1)
 %
 % OUTPUTS:
 %   y = [KxM] the value of the interpolant at each point in t
