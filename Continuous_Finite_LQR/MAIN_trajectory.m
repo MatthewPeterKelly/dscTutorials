@@ -162,16 +162,21 @@ zNom = [xSol(1);ySol(1)];
 nSim = 25;
 xSim = zeros(nTime,nSim);
 ySim = zeros(nTime,nSim);
+uSim = zeros(nTime,nSim);
 del = 0.1;  %Initial position error amplitude
+failFlag = false(nSim,1);
 for i=1:nSim
     try
         z0 = zNom + del*randn(2,1);
         [~, yout] = ode45(userFunc,tSol,z0);
         xSim(:,i) = yout(:,1);
         ySim(:,i) = yout(:,2);
+        uSim(:,i) = controller(tSol,yout');
     catch ME
         xSim(:,i) = z0(1);
         ySim(:,i) = z0(2);
+        uSim(:,i) = 0;
+        failFlag(i) = true;
     end
 end
 
@@ -181,5 +186,31 @@ for i=1:nSim
     plot(xSim(:,i),ySim(:,i),'k-','LineWidth',1);
 end
 
+%%%% Plot trajectories against time:
+figure(5); clf;
 
+for i=1:nSim
+    if ~failFlag(i)
+        subplot(3,1,1); hold on;
+        plot(tSol,xSim(:,i),'k-','LineWidth',1)
+        subplot(3,1,2); hold on;
+        plot(tSol,ySim(:,i),'k-','LineWidth',1)
+        subplot(3,1,3); hold on;
+        plot(tSol,uSim(:,i),'k-','LineWidth',1)
+    end
+end
 
+subplot(3,1,1); hold on;
+plot(tSol,xSol,'r-','LineWidth',3)
+xlim(tSpan);
+ylabel('x')
+title('Compare simulations against reference trajectory')
+subplot(3,1,2); hold on;
+plot(tSol,ySol,'r-','LineWidth',3)
+xlim(tSpan);
+ylabel('y')
+subplot(3,1,3); hold on;
+plot(tSol,uSol,'r-','LineWidth',3)
+xlim(tSpan);
+ylabel('u')
+xlabel('t')

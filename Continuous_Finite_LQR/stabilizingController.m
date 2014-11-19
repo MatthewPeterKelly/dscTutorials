@@ -11,6 +11,6 @@ uRef = polyval(uFit,t);
 Kx = polyval(kxFit,t);
 Ky = polyval(kyFit,t);
 
-u = uRef - Kx*(x-xRef) - Ky*(y-yRef);
+u = uRef - Kx.*(x-xRef) - Ky.*(y-yRef);
 
 end
