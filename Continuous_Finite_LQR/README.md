@@ -17,7 +17,7 @@ Entry-point function for the primary demo, using the full non-linear plant
 ### trajectoryLqr:
 Solves the finite-horizon continuous-time LQR problem for a time-varying plant (stabilize a non-linear trajectory)
 
-## Derive_EoM:
+### Derive_EoM:
 Derives the dynamics equations and writes function files for the non-linear plant. 
 
 ### MAIN_linearPlant:

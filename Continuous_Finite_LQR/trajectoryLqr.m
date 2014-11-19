@@ -1,9 +1,31 @@
 function Soln = trajectoryLqr(t,linSys,Q,R,F,tol)
-
+% Soln = trajectoryLqr(t,linSys,Q,R,F,tol)
+%
 % This function is used to solve the finite-horizon continuout-time linear
 % quadratic regulator problem.
-
-% [A, B] = linSys(t)
+%
+% INPUTS:
+%   t = monotonically increasing vector of times at which you would like
+%       the gain matrix to be calculated
+%   linSys = function handle for time-varying linear dynamics
+%       [A, B] = linSys(t)
+%   Q = state cost matrix 
+%   R = input cost matrix 
+%   F = final state cost matrix 
+%   tol = accuracy of riccati equation propagation
+%
+% OUTPUTS:
+%   Soln = struct array with solution at each point in t
+%   Soln(i).t = t(i);
+%   Soln(i).K = gain matrix at t(i)
+%   Soln(i).S = riccati function
+%   Soln(i).E = close-loop eigen-values for system at t(i)
+%
+% NOTES:
+%
+%   J = x'Fx + Integral {x'Qx + u'Ru} dt
+%
+% See Also LQR
 
 nState = size(Q,1);
 nInput = size(R,1);
