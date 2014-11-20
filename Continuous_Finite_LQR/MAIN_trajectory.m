@@ -105,7 +105,7 @@ linSys = @(t)getLinTraj(t,xFit,yFit,uFit);
 
 Q = eye(2);  % Running cost on state
 R = 1;       % Running cost on input
-F = eye(2);  % Terminal cost on state
+F = 2*eye(2);  % Terminal cost on state
 tol = 1e-6;  % Accuracy of ricatti propagation
 
 Soln = trajectoryLqr(tSol,linSys,Q,R,F,tol);
@@ -228,15 +228,15 @@ xlabel('t')
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-%              Computate the backward reachable set                       %
+%    Computate the backward reachable set   --  Convex Hull Method        %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 nSamples = 500;  %How many simulations to run?
 nPointsPerSample = 10;  %Used for computing reachable set
 
 % What is "close enough" to the final state?
-xRadFinal = 0.02;
-yRadFinal = 0.02;
+xRadFinal = 0.015;
+yRadFinal = 0.015;
 
 %Compute a random set of initial conditions
 IC = randDisk(nSamples,[xRadFinal,yRadFinal]);
@@ -245,28 +245,27 @@ IC = randDisk(nSamples,[xRadFinal,yRadFinal]);
 tSpanFlip = linspace(tSpan(2),tSpan(1),nPointsPerSample);   %Run system backwards in time
 
 %Create a data structure for storing the point cloud:
-Reach.t = ones(nSamples,1)*tSpanFlip;  % Time
-Reach.x = zeros(nSamples,nPointsPerSample);  % x position
-Reach.y = zeros(nSamples,nPointsPerSample);  % y position
-Reach.c(nPointsPerSample).x = []; %x contour
-Reach.c(nPointsPerSample).y = []; %x contour
+ReachCvx.t = ones(nSamples,1)*tSpanFlip;  % Time
+ReachCvx.x = zeros(nSamples,nPointsPerSample);  % x position
+ReachCvx.y = zeros(nSamples,nPointsPerSample);  % y position
+ReachCvx.c(nPointsPerSample).x = []; %x contour
+ReachCvx.c(nPointsPerSample).y = []; %x contour
 
 %Run the simulation:
 for i=1:nSamples
     idxLow = (i-1)*nPointsPerSample+1;
     idxUpp= i*nPointsPerSample;
-    idx = idxLow:idxUpp;
     [~, yout] = ode45(userFunc,tSpanFlip,IC(:,i));
-    Reach.x(i,:) = yout(:,1);
-    Reach.y(i,:) = yout(:,2);
+    ReachCvx.x(i,:) = yout(:,1);
+    ReachCvx.y(i,:) = yout(:,2);
 end
 
 %Compute the convex hull at each time step
 for i=1:nPointsPerSample
-    k = convhull(Reach.x(:,i),Reach.y(:,i));
-    Reach.c(i).t = Reach.t(k,i);
-    Reach.c(i).x = Reach.x(k,i);
-    Reach.c(i).y = Reach.y(k,i);
+    k = convhull(ReachCvx.x(:,i),ReachCvx.y(:,i));
+    ReachCvx.c(i).t = ReachCvx.t(k,i);
+    ReachCvx.c(i).x = ReachCvx.x(k,i);
+    ReachCvx.c(i).y = ReachCvx.y(k,i);
 end
 
 
@@ -275,15 +274,78 @@ figure(6); clf; hold on;
 colors = jet(nPointsPerSample);
 for i=1:nPointsPerSample
     %Convex Hull
-    plot3(Reach.c(i).x, Reach.c(i).y, Reach.c(i).t,'color',colors(i,:));
+    plot3(ReachCvx.c(i).x, ReachCvx.c(i).y, ReachCvx.c(i).t,'color',colors(i,:));
     %Point Cloud:
-    plot3(Reach.x(:,i), Reach.y(:,i), Reach.t(:,i),'.','MarkerSize',10,'color',colors(i,:));
+    plot3(ReachCvx.x(:,i), ReachCvx.y(:,i), ReachCvx.t(:,i),'.','MarkerSize',10,'color',colors(i,:));
 end
-plot3(xSol,ySol,tSol,'k-');
+
+%plot the nominal trajectory
+plot3(xSol,ySol,tSol,'k-','LineWidth',3);
+
+
 
 title('Convex Hull approximation of the reachable set');
 xlabel('x'); ylabel('y'); zlabel('time');
 view(3);
+
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%    Computate the backward reachable set   --  Front Propagation         %
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+
+nSamples = 250;  %How many simulations to run?
+nPointsPerSample = 10;  %Used for computing reachable set
+
+% What is "close enough" to the final state?
+xRadFinal = 0.015;
+yRadFinal = 0.015;
+
+%Compute initial conditions on the circle around the final set:
+angle = linspace(0,2*pi,nSamples+1); angle(end) = [];
+IC = [cos(angle); sin(angle)];
+IC(1,:) = IC(1,:)*xRadFinal;
+IC(2,:) = IC(2,:)*yRadFinal;
+
+%Simulation runs backwards in time
+tSpanFlip = linspace(tSpan(2),tSpan(1),nPointsPerSample);   %Run system backwards in time
+
+%Create a data structure for storing the point cloud:
+ReachFrt.t = ones(nSamples,1)*tSpanFlip;  % Time
+ReachFrt.x = zeros(nSamples,nPointsPerSample);  % x position
+ReachFrt.y = zeros(nSamples,nPointsPerSample);  % y position
+
+%Run the simulation:
+for i=1:nSamples
+    idxLow = (i-1)*nPointsPerSample+1;
+    idxUpp= i*nPointsPerSample;
+    [~, yout] = ode45(userFunc,tSpanFlip,IC(:,i));
+    ReachFrt.x(i,:) = yout(:,1);
+    ReachFrt.y(i,:) = yout(:,2);
+end
+
+%Plot the reachable sets against time:
+figure(7); clf; hold on;
+colors = jet(nPointsPerSample);
+idx = [1:size(ReachFrt.x,1),1];  %Make the contours wrap around
+for i=1:nPointsPerSample
+    %Front contour
+    plot3(ReachFrt.x(idx,i), ReachFrt.y(idx,i), ReachFrt.t(idx,i),'color',colors(i,:));
+    %Point Cloud:
+    plot3(ReachFrt.x(:,i), ReachFrt.y(:,i), ReachFrt.t(:,i),'k.','MarkerSize',15);
+    %Fill the central region:
+    h = patch(ReachFrt.x(idx,i), ReachFrt.y(idx,i), ReachFrt.t(idx,i),colors(i,:));
+end
+plot3(xSol,ySol,tSol,'k-');
+
+hp = findobj(gcf,'type','patch');
+set(hp,'facealpha',0.7)
+set(hp,'edgealpha',0.1)
+
+title('Front Propagation approximation of the reachable set');
+xlabel('x'); ylabel('y'); zlabel('time');
+view(3);
+
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
