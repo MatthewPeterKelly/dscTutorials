@@ -1,10 +1,8 @@
-function u = stabilizingController(t,z,xFit,yFit,uFit,kxFit,kyFit)
+function u = stabilizingController(t,x,y,xFit,yFit,uFit,kxFit,kyFit)
 
 %This function is a controller that is used to stabilize the system to a
 %nominal trajectory.
 
-x = z(1,:);
-y = z(2,:);
 xRef = polyval(xFit,t);
 yRef = polyval(yFit,t);
 uRef = polyval(uFit,t);

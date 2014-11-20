@@ -4,8 +4,11 @@
 
 syms x y u 'real'
 
-dx = y*sin(x) + y*y;
-dy = x*y + x*cos(x)+ u*cos(x);
+% % dx = y*sin(x) + y*y;
+% % dy = x*y + x*cos(x)+ u*cos(x);
+
+dx = sin(y)+1-cos(u);
+dy = sin(x)+sin(u);
 
 z = [x;y];
 f = [dx;dy];

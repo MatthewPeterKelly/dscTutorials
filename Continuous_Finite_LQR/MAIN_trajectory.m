@@ -5,21 +5,34 @@
 %
 %
 clear; clc;
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%                       User Set Parameters                               %
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+
+nSim = 25;
+testPerturbation = 0.1;  %Initial position error amplitude
+
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 %                       Draw the dynamical system                         %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 n = 13;
-x = linspace(-1,1,n);
-y = linspace(-1,1,n);
+xLim = [-4,1.5];
+yLim = [-4,1];
+x = linspace(xLim(1),xLim(2),n);
+y = linspace(yLim(1),yLim(2),n);
 
-[xx,yy] = meshgrid(x,y);
+[xx,yy] = ndgrid(x,y); 
 
 [dxx, dyy] = dynamics(xx,yy,zeros(n,n));
 
 figure(1); clf; hold on;
-title('Dynamical System');
+title('Dynamical System - Simulations');
 quiver(xx,yy,dxx,dyy);
+xlabel('x');
+ylabel('y');
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -27,10 +40,10 @@ quiver(xx,yy,dxx,dyy);
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 options = odeset();
-options.Events = @eventFunc;
+options.Events = @(t,z)eventFunc(t,z,xLim,yLim);
 tSpan = [0,-10];
 
-control = @(t) -0.25*sin(t);
+control = @(t) -2*sin(0.4*t-0.1)+0.6*cos(0.9*t+0.1);
 
 userFunc = @(t,z)rhs(t,z,control(t));
 z0 = [0;0];
@@ -47,7 +60,7 @@ tSpan = [tSol(1),tSol(end)];
 
 plot(xSol,ySol,'r-','LineWidth',3);
 plot(0,0,'ro','MarkerSize',10,'LineWidth',2)
-axis(1.2*[-1,1,-1,1]); axis equal; axis off
+axis(1.2*[xLim,yLim]); axis equal;
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 %                      Store the reference trajectory                     %
@@ -155,19 +168,17 @@ xlabel('t')
 %                         Run a bunch of simulations                      %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
-controller = @(t,z)stabilizingController(t,z,xFit,yFit,uFit,kxFit,kyFit);
+controller = @(t,z)stabilizingController(t,z(1,:),z(2,:),xFit,yFit,uFit,kxFit,kyFit);
 userFunc = @(t,z)rhs(t,z,controller(t,z));
 zNom = [xSol(1);ySol(1)];
 
-nSim = 25;
 xSim = zeros(nTime,nSim);
 ySim = zeros(nTime,nSim);
 uSim = zeros(nTime,nSim);
-del = 0.1;  %Initial position error amplitude
 failFlag = false(nSim,1);
 for i=1:nSim
     try
-        z0 = zNom + del*randn(2,1);
+        z0 = zNom + testPerturbation*randn(2,1);
         [~, yout] = ode45(userFunc,tSol,z0);
         xSim(:,i) = yout(:,1);
         ySim(:,i) = yout(:,2);
@@ -214,3 +225,25 @@ plot(tSol,uSol,'r-','LineWidth',3)
 xlim(tSpan);
 ylabel('u')
 xlabel('t')
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%              Computation with the Level Set Toolbox                     %
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+
+%This section of code requires the levelSetToolbox to operate:
+%         http://www.cs.ubc.ca/~mitchell/ToolboxLS/
+if exist('odeCFLset','file')
+    %This section of code is still under development. As of 11/20/2014 the
+    %following two scripts should run, but they are slow. It also seems
+    %that there is some numerical dissapation, that is causing inaccurate
+    %results for any reasonable level of discretization.
+    
+    %%%% reachableForward   
+    %%%% reachableForwardRel    
+end
+
+
+
+
+
