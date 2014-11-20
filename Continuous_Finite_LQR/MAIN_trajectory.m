@@ -24,7 +24,7 @@ yLim = [-4,1];
 x = linspace(xLim(1),xLim(2),n);
 y = linspace(yLim(1),yLim(2),n);
 
-[xx,yy] = ndgrid(x,y); 
+[xx,yy] = ndgrid(x,y);
 
 [dxx, dyy] = dynamics(xx,yy,zeros(n,n));
 
@@ -228,6 +228,65 @@ xlabel('t')
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%              Computate the backward reachable set                       %
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+
+nSamples = 500;  %How many simulations to run?
+nPointsPerSample = 10;  %Used for computing reachable set
+
+% What is "close enough" to the final state?
+xRadFinal = 0.02;
+yRadFinal = 0.02;
+
+%Compute a random set of initial conditions
+IC = randDisk(nSamples,[xRadFinal,yRadFinal]);
+
+%Simulation runs backwards in time
+tSpanFlip = linspace(tSpan(2),tSpan(1),nPointsPerSample);   %Run system backwards in time
+
+%Create a data structure for storing the point cloud:
+Reach.t = ones(nSamples,1)*tSpanFlip;  % Time
+Reach.x = zeros(nSamples,nPointsPerSample);  % x position
+Reach.y = zeros(nSamples,nPointsPerSample);  % y position
+Reach.c(nPointsPerSample).x = []; %x contour
+Reach.c(nPointsPerSample).y = []; %x contour
+
+%Run the simulation:
+for i=1:nSamples
+    idxLow = (i-1)*nPointsPerSample+1;
+    idxUpp= i*nPointsPerSample;
+    idx = idxLow:idxUpp;
+    [~, yout] = ode45(userFunc,tSpanFlip,IC(:,i));
+    Reach.x(i,:) = yout(:,1);
+    Reach.y(i,:) = yout(:,2);
+end
+
+%Compute the convex hull at each time step
+for i=1:nPointsPerSample
+    k = convhull(Reach.x(:,i),Reach.y(:,i));
+    Reach.c(i).t = Reach.t(k,i);
+    Reach.c(i).x = Reach.x(k,i);
+    Reach.c(i).y = Reach.y(k,i);
+end
+
+
+%Plot the reachable sets against time:
+figure(6); clf; hold on;
+colors = jet(nPointsPerSample);
+for i=1:nPointsPerSample
+    %Convex Hull
+    plot3(Reach.c(i).x, Reach.c(i).y, Reach.c(i).t,'color',colors(i,:));
+    %Point Cloud:
+    plot3(Reach.x(:,i), Reach.y(:,i), Reach.t(:,i),'.','MarkerSize',10,'color',colors(i,:));
+end
+plot3(xSol,ySol,tSol,'k-');
+
+title('Convex Hull approximation of the reachable set');
+xlabel('x'); ylabel('y'); zlabel('time');
+view(3);
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 %              Computation with the Level Set Toolbox                     %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
@@ -239,8 +298,8 @@ if exist('odeCFLset','file')
     %that there is some numerical dissapation, that is causing inaccurate
     %results for any reasonable level of discretization.
     
-    %%%% reachableForward   
-    %%%% reachableForwardRel    
+    %%%% reachableForward
+    %%%% reachableForwardRel
 end
 
 
