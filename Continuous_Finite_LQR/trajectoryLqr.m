@@ -18,7 +18,7 @@ function Soln = trajectoryLqr(t,linSys,Q,R,F,tol)
 %   Soln = struct array with solution at each point in t
 %   Soln(i).t = t(i);
 %   Soln(i).K = gain matrix at t(i)
-%   Soln(i).S = riccati function
+%   Soln(i).S = Cost to go
 %   Soln(i).E = close-loop eigen-values for system at t(i)
 %
 % NOTES:
@@ -72,3 +72,5 @@ function [dP, K] = ricatti(A,B,Q,R,P)
 K = R\B'*P;
 dP = -(A'*P + P*A - P*B*K + Q);
 end
+
+
