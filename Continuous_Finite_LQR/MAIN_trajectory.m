@@ -139,11 +139,11 @@ ssSoln(nTime).E = zeros(2,1);
 for i=1:nTime
     tNow = tSol(i);
     [A,B] = linSys(tNow);
-    [KK,S,E] = lqr(A,B,Q,R);
+    [KK,SS,EE] = lqr(A,B,Q,R);
     ssSoln(i).t = 0;
     ssSoln(i).K = KK;
-    ssSoln(i).S = S;
-    ssSoln(i).E = E;
+    ssSoln(i).S = SS;
+    ssSoln(i).E = EE;
 end
 
 ssK = reshape([ssSoln.K],2,nTime);
@@ -162,6 +162,31 @@ legend('finite','infinite')
 xlim(tSpan);
 ylabel('Ky')
 xlabel('t')
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%                     Lyapunov Stability Analysis                         %
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+
+% Let V(x) = x'Sx, where S is the cost-to-go matrix from LQR solution:
+
+%%%% TODO %%%%
+
+% Plan:
+%
+%   1) Represent the S matrix, which is time-varying, as a polynomial.
+%
+%   2) Compute the derivative of S wrt time.
+%
+%   3) Try the Lyapunov function:
+%           V(x,t) = x'*S(t)*x     % x = perturbation from nominal
+%           dV(x,t) = 2*x*f(x,t)*S(t)*dS(t)   %Chain Rule  (check math...)
+%   
+%   4) Verify stability by checking signs of lyapunov function and
+%      derivative?
+%  
+%   5) Not sure if this whole approach is correct - check against papers...
+%
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
@@ -345,7 +370,6 @@ set(hp,'edgealpha',0.1)
 title('Front Propagation approximation of the reachable set');
 xlabel('x'); ylabel('y'); zlabel('time');
 view(3);
-
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
