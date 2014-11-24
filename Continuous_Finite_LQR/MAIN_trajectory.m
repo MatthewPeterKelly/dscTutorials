@@ -103,9 +103,9 @@ xlabel('t')
 %Function handle for getting linearized system dynamics
 linSys = @(t)getLinTraj(t,xFit,yFit,uFit);
 
-Q = eye(2);  % Running cost on state
-R = 1;       % Running cost on input
-F = 2*eye(2);  % Terminal cost on state
+Q = eye(2);  % Running cost on state  
+R = 1;       % Running cost on input  
+F = eye(2);  % Terminal cost on state 
 tol = 1e-6;  % Accuracy of ricatti propagation
 
 Soln = trajectoryLqr(tSol,linSys,Q,R,F,tol);
