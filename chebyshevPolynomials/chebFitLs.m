@@ -1,4 +1,4 @@
-function [f,d,x] = chebFitLs(t,y,d,n)
+function [f,d,x,mse] = chebFitLs(t,y,d,n)
 %[f,d,x] = chebFitLs(t,y,d,n)
 %
 % FUNCTION:
@@ -38,7 +38,7 @@ else
 end
 
 %Now use a more sophisticated method to refine f
-f = fminsearch(func,fGuess);
+[f, mse] = fminsearch(func,fGuess);
 
 end
 
