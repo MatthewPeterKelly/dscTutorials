@@ -42,7 +42,7 @@ th = z(1,:); w = z(2,:); %Unpack the state vector
 
 %Dynamics:
 dth = w;  
-dw = -(P.g/P.l)*sin(th) - (P.c/P.m)*w;
+dw = -(P.g/P.l)*sin(th) - (P.c/(P.m*P.l*P.l))*w;
 
 dz = [dth; dw];  %Pack up state derivative
 end
