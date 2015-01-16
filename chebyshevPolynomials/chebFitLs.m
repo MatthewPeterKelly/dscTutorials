@@ -1,5 +1,5 @@
 function [f,d,x,mse] = chebFitLs(t,y,d,n)
-%[f,d,x] = chebFitLs(t,y,d,n)
+%[f,d,x,mse] = chebFitLs(t,y,d,n)
 %
 % FUNCTION:
 %   This function fits chebyshev polynomial of order n to data using a lest
