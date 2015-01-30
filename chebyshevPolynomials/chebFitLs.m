@@ -5,18 +5,18 @@ function [f,d,x,mse] = chebFitLs(t,y,d,n)
 %   This function fits chebyshev polynomial of order n to data using a lest
 %   squares fit. It is much slower than chebyshevFit, but is more accurate
 %   for data that is noisy. This can be slow if the order if length(t) or n
-%   is too large. 
+%   is too large.
 %
 % INPUTS:
-%   t = data input
-%   y = data output
-%   d = domain
+%   t = [1 x nTime] data input
+%   y = [nState x nTime] data output
+%   d = [1 x 2] domain
 %   n = order of the fit (non-negative integer)
 %
 % OUTPUTS:
-%   f = [1x(n+1)] vector of values of the curve fit at each chebyshev node
+%   f = [nState x (n+1)] vector of values of the curve fit at each chebyshev node
 %   d = [1x2] vector giving the domain of the curve fit
-%   x = [1x(n+1)] vector of the chebyshev points used for the fit
+%   x = [1 x (n+1)] vector of the chebyshev points used for the fit
 %
 %
 % NOTES:
@@ -28,17 +28,21 @@ function [f,d,x,mse] = chebFitLs(t,y,d,n)
 %
 
 x = chebyshevPoints(n+1,d);
-fGuess = interp1(t',y',x','pchip','extrap')';
-
-if exist('chebEval_mex','file')
-    func = @(f)getFitError_mex(f,t,d,y);
-else
-    func = @(f)getFitError(f,t,d,y);
-    disp('Warning: could not find chebEval_mex, using chebEval instead. This will make computation very slow.');
-end
+fGuess = interp1(t',y',x','spline','extrap')';
 
 %Now use a more sophisticated method to refine f
-[f, mse] = fminsearch(func,fGuess);
+nState = size(fGuess,1);
+f = zeros(size(fGuess));
+mse = zeros(nState,1);
+for i=1:nState
+    if exist('chebEval_mex','file')
+        func = @(f)getFitError_mex(f,t,d,y(i,:));
+    else
+        func = @(f)getFitError(f,t,d,y(i,:));
+        disp('Warning: could not find chebEval_mex, using chebEval instead. This will make computation very slow.');
+    end
+    [f(i,:), mse(i)] = fminsearch(func,fGuess(i,:));
+end
 
 end
 
