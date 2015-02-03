@@ -10,7 +10,8 @@ function If = chebyshevIntegral(f,d)
 %   d = [1 x 2] domain of the chebyshev function
 %
 % OUTPUTS:
-%   If = the integral of the chebyshev interpolant at each chebyshev node
+%   If = the integral of the chebyshev interpolant at each chebyshev node,
+%   with the integral defined to be zero at the first node.
 %
 
 %Get the quadrature weights:
