@@ -36,6 +36,7 @@
 %   ddy = -c*dy*sqrt(dx.*dx + dy.*dy) - 1; 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clc; clear;
 
 %Provide an initial guess for the solver
 guess.initSpeed = 9.0;
@@ -45,43 +46,28 @@ guess.initAngle = (pi/180)*45;
 target.x = 6.0;
 target.y = 0;
 
-% Set up the problem parameters:
-param.c = 0.4;  %Quadratic drag coefficient
+% Set up the parameters for the dynamics function:
+param.dynamics.c = 0.4;  %Quadratic drag coefficient
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-param.nGrid = 26;  %Discritization of the solver grid
+%%% Set up the grid discretization for each method:
+param.singleShooting.nGrid = 26; 
+param.multipleShooting.nSegment = 5;
+param.multipleShooting.nSubStep = 6;
 
-%%% Parameters for problem diagnostics
-param.diagnostics.enable = true;   %Enable plotting and log iterations?
-param.diagnostics.plotPause = 0.25;  %How much to pause on each plot iteration
+%%% Parameters for diagnostics (visualization only)
+param.diagnostics.enable = false;   %Enable plotting and log iterations?
+param.diagnostics.animationDuration = 5;  %(seconds) How long is the animation
 param.diagnostics.writeGif = true;   %Save each iteration to a gif
-param.diagnostics.gifName = 'cannon_singleShooting.gif';
 param.diagnostics.gifPixelDim = [800,400];  %How big of a gif to make?
+param.diagnostics.figNum.singleShooting = 10;
+param.diagnostics.figNum.multipleShooting = 11;
 
 % Use single shooting to find the answer:
-soln = cannon_singleShooting(guess,target,param);
+soln.singleShooting = cannon_singleShooting(guess,target,param);
+figure(22); clf; plotSoln(soln.singleShooting, target, param);
 
-% Plot the solution:
-figure(101); clf; plotTraj(soln, target);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-param.nSegment = 5;
-param.nSubStep = 5;
-
-%%% Parameters for problem diagnostics
-param.diagnostics.enable = true;   %Enable plotting and log iterations?
-param.diagnostics.plotPause = 0.25;  %How much to pause on each plot iteration
-param.diagnostics.writeGif = true;   %Save each iteration to a gif
-param.diagnostics.gifName = 'cannon_multipleShooting.gif';
-param.diagnostics.gifPixelDim = [800,400];  %How big of a gif to make?
-
-% Use single shooting to find the answer:
-soln = cannon_multipleShooting(guess,target,param);
-
-% Plot the solution:
-figure(103); clf; plotTraj(soln, target);
 
 
 

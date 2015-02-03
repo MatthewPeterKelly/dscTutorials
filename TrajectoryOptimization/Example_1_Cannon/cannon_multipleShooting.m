@@ -75,21 +75,12 @@ soln.dy = zTraj(4,:);
 soln.success = exitFlag == 1;
 soln.cost = fVal;
 
+%%% Run diagnostics on the solution if desired:
+if param.diagnostics.enable
+    diagnostics_singleShooting(target,param)
 end
 
-
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-%                Objective function for multiple shooting                 %
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-
-function cost = objective(dx,dy)
-% Objective function for optimization. Here we set the objective function
-% to be proportional to the initial energy of the cannon ball. Note that
-
-cost = dx.*dx + dy.*dy;
-
 end
-
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
