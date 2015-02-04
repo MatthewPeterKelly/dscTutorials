@@ -1,4 +1,5 @@
 function [y, Dy, DDy, DDDy] = chebyshevInterpolate(f,t,d)
+%[y, Dy, DDy, DDDy] = chebyshevInterpolate(f,t,d)
 %
 % This function uses barycentric interpolation to evaluate a chebyshev
 % polynomial. Technical details are taken from the book: Approximation
