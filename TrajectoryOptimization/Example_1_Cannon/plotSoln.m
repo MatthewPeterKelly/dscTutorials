@@ -19,7 +19,7 @@ plot(x,y,'k-','LineWidth',3);
 
 %%% Add labels and title
 objVal = objective(dx(1),dy(1));
-title(sprintf('Cannon Ball Trajectory:    (cost = %6.3f)',objVal));
+title(sprintf('Trajectory via %s   (cost = %6.3f)',traj.method ,objVal));
 xlabel('Y  Position')
 ylabel('X  Position')
 hold off;

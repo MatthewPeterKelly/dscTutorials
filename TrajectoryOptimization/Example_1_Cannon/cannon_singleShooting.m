@@ -8,8 +8,9 @@ function soln = cannon_singleShooting(guess,target,param)
 %   guess.initAngle
 %   target.x
 %   target.y
-%   param.c = quadratic drag coefficient
-%   param.nGrid = number of grid points for the integration method
+%   param.dynamics.c = quadratic drag coefficient
+%   param.singleShooting.nGrid = number of grid points for the integration method
+%   param.diagnostics = struct for diagnostics 
 %
 % OUTPUTS:
 %   soln.t
@@ -70,6 +71,7 @@ soln.dx = zTraj(3,:);
 soln.dy = zTraj(4,:);
 soln.success = exitFlag == 1;
 soln.cost = fVal;
+soln.method = 'Single Shooting';
 
 %%% Run diagnostics on the solution if desired:
 if param.diagnostics.enable
