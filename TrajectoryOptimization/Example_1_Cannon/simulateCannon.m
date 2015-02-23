@@ -10,7 +10,7 @@ nGrid = param.nGrid;
 x0 = 0;  y0 = 0;  %Start at the origin
 dx0 = v0*cos(th0);
 dy0 = v0*sin(th0);
-if dy0 < 0, error('Cannot point cannon through ground! sin(th0) > 0 Required.'); end;
+if dy0 < 0, error('Cannot point cannon through ground! sin(th0) > 0 required.'); end;
 
 % Set up arguments for ode45
 userFun = @(t,z)cannonDynamics(t,z,c);  %Dynamics function

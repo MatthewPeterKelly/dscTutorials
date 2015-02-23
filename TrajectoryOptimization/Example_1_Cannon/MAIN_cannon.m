@@ -53,12 +53,12 @@ param.dynamics.c = 0.4;  %Quadratic drag coefficient
 
 %%% Set up the grid discretization for each method:
 param.singleShooting.nGrid = 20; 
-param.multipleShooting.nSegment = 5;
-param.multipleShooting.nSubStep = 4;
+param.multipleShooting.nSegment = 10;
+param.multipleShooting.nSubStep = 2;
 
 %%% Parameters for diagnostics (visualization only)
 param.diagnostics.enable = true;   %Enable plotting and log iterations?
-param.diagnostics.animationDuration = 5;  %(seconds) How long is the animation?
+param.diagnostics.animationDuration = 6;  %(seconds) How long is the animation?
 param.diagnostics.writeGif = false;   %Save animation to a gif?
 param.diagnostics.gifPixelDim = [800,400];  %How big of a gif to make?
 param.diagnostics.figNum.singleShooting = 10;
