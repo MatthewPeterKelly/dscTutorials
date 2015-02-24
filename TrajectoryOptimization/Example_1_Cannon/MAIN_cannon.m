@@ -49,7 +49,13 @@ clc; clear;
 % 3) What happens if you move the target away? 
 % Open:  TEST_cannonFeasibility.m   to see the answer. 
 %
-% 4) You can speed up the optimizations by disabling diagnostics or making
+% 4) For either large range or large damping, the problem becomes stiff. As
+% a result, the integration methods (either implicit or explicit) start to
+% fail near the beginning of the trajectory where the speed is very high.
+% If you use a log spaced grid (rather than uniform), then all methods
+% perform better.
+%
+% 5) You can speed up the optimizations by disabling diagnostics or making
 % each animation shorter.
 %
 
@@ -68,15 +74,16 @@ param.dynamics.c = 0.4;  %Quadratic drag coefficient
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% Set up the grid discretization for each method:
-param.singleShooting.nGrid = 24; 
-param.multipleShooting.nSegment = 6;
-param.multipleShooting.nSubStep = 4;
-param.collocation.nSegment = 24;
+param.singleShooting.nGrid = 100; 
+param.multipleShooting.nSegment = 10;
+param.multipleShooting.nSubStep = 5;
+param.collocation.nSegment = 50;
+param.gpops.nSegment = 10;
 
 %%% Parameters for diagnostics (visualization only)
 param.diagnostics.enable = true;   %Enable plotting and log iterations?
-param.diagnostics.animationDuration = 8;  %(seconds) How long is the animation?
-param.diagnostics.writeGif = false;   %Save animation to a gif?
+param.diagnostics.animationDuration = 5;  %(seconds) How long is the animation?
+param.diagnostics.writeGif = true;   %Save animation to a gif?
 param.diagnostics.gifPixelDim = [800,400];  %How big of a gif to make?
 param.diagnostics.figNum.singleShooting = 10;
 param.diagnostics.figNum.multipleShooting = 11;

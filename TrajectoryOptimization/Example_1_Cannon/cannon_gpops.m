@@ -64,12 +64,20 @@ setup.nlp.snoptoptions.maxiterations = 500;
 
 setup.derivatives.supplier = 'sparseCD';
 setup.derivatives.derivativelevel = 'first';
+
 setup.mesh.method = 'hp-PattersonRao';
-setup.mesh.maxiterations = 2;
+setup.mesh.maxiterations = 6;
 setup.mesh.tolerance = 1e-4;
 setup.mesh.colpointsmin = 4;
 setup.mesh.colpointsmax = 10;
+
+nSegment = param.gpops.nSegment;
+gridGuess = ones(1,nSegment);
+setup.mesh.phase.fraction = gridGuess/sum(gridGuess);
+setup.mesh.phase.colpoints = 4*ones(1,nSegment);
+
 setup.method = 'RPM-Integration';
+
 
 output = gpops2(setup);
 

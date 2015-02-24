@@ -1,4 +1,4 @@
-function diagnostics_collocation(target,param)
+function diagnostics_collocation(target,param,soln)
 % This function is used for generating various plots and statistics about
 % the optimization run for the cannon problem.
 %
@@ -52,14 +52,22 @@ for iter=1:nIter
     axis(plotAxis); drawnow;
     pause(frameRate);
     
+    if ~soln.success
+        textColor = 'r';
+    else
+        textColor = 'k';
+    end
+    
     %%% Print the convergence details:
     if exist('hText','var'), delete(hText); end;
     xText = plotAxis(1) + 0.05*diff(plotAxis(1:2));
     yText = plotAxis(3) + 0.9*diff(plotAxis(3:4));
     textString = {...
         sprintf('1st-order optimal: %3.3e',optimVal.firstorderopt);
-        sprintf('constraint violation: %3.3e',optimVal.constrviolation)};
-    hText = text(xText,yText,textString,'FontSize',14,'FontWeight','light');
+        sprintf('constraint violation: %3.3e',optimVal.constrviolation);
+        sprintf('initial speed: %3.3f',sqrt(soln.cost))};
+    hText = text(xText,yText,textString,'FontSize',14,...
+        'FontWeight','light','Color',textColor);
     
     %%% Stuff for saving as a GIF
     if param.diagnostics.writeGif

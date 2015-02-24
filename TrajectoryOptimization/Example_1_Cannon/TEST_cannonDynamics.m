@@ -3,15 +3,15 @@
 % This script runs a simple simulation to demonstrate the dynamics of the
 % cannon ball problem.
 %
-% 
-% clc; clear;
+
+clc; clear;
 
 % Cannon ball starts at the origin
 x0 = 0;
 y0 = 0;
 
 % Prescribe initial conditions with velocity and angle
-v0 = 10000;
+v0 = 10;
 th0 = 45*(pi/180);
 
 % Quadratic drag coefficient:
@@ -20,11 +20,6 @@ c = 0.2;
 % Set up initial conditions for ode45
 dx0 = v0*cos(th0);
 dy0 = v0*sin(th0);
-
-dx0 = soln.collocation.dx(1);
-dy0 = soln.collocation.dy(1);
-c = param.dynamics.c;
-
 
 if dy0 < 0, error('Cannot point cannon through ground! sin(th0) > 0 Required.'); end;
 

@@ -1,4 +1,4 @@
-function diagnostics_singleShooting(target,param)
+function diagnostics_singleShooting(target,param,soln)
 % This function is used for generating various plots and statistics about
 % the optimization run for the cannon problem.
 %
@@ -25,6 +25,13 @@ if param.diagnostics.writeGif
         'DelayTime',frameRate);
 end
 
+    if ~soln.success
+        textColor = 'r';
+    else
+        textColor = 'k';
+    end  
+    
+
 %%% Loop over each iteration and plot the trajectory
 for iter=1:nIter
     optimVal = ITER_LOG_SINGLESHOOTING(iter).optimVal;
@@ -47,8 +54,10 @@ for iter=1:nIter
     yText = plotAxis(3) + 0.9*diff(plotAxis(3:4));
     textString = {...
         sprintf('1st-order optimal: %3.3e',optimVal.firstorderopt);
-        sprintf('constraint violation: %3.3e',optimVal.constrviolation)};
-    hText = text(xText,yText,textString,'FontSize',14,'FontWeight','light');
+        sprintf('constraint violation: %3.3e',optimVal.constrviolation);
+        sprintf('initial speed: %3.3f',sqrt(soln.cost))};
+    hText = text(xText,yText,textString,'FontSize',14,...
+        'FontWeight','light','Color',textColor);
     
     %%% Stuff for saving as a GIF
     if param.diagnostics.writeGif

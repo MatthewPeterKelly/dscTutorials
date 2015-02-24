@@ -77,7 +77,7 @@ soln.method = 'Single Shooting';
 
 %%% Run diagnostics on the solution if desired:
 if param.diagnostics.enable
-    diagnostics_singleShooting(target,param)
+    diagnostics_singleShooting(target,param,soln)
 else
     figure(param.diagnostics.figNum.singleShooting); clf;
     plotSoln(soln, target, param);

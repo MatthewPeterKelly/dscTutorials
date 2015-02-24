@@ -28,7 +28,7 @@ plot(x,y,'LineWidth',3,'Color',color);
 
 %%% Add labels and title
 objVal = objective(dx(1),dy(1));
-title(sprintf('Trajectory via %s   (cost = %6.3f) %s',traj.method ,objVal,message));
+title(sprintf('Trajectory via %s   (initial speed = %6.3f) %s',traj.method ,sqrt(objVal),message));
 xlabel('Y  Position')
 ylabel('X  Position')
 hold off;
