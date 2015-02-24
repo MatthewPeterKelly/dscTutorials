@@ -35,8 +35,8 @@ guess.T = traj.t(end);  %Trajectory duration
 
 %%% Set up the decision variables and bounds:
 problem.x0 = [guess.dx0; guess.dy0; guess.T];
-problem.lb = [-10, 0, 0];    % Lower bound on decision variables
-problem.ub = [10, 10, 10];   % Upper bound on decision variables
+problem.lb = [];    % Lower bound on decision variables
+problem.ub = [];   % Upper bound on decision variables
 
 %%% Set up the linear constraints (there are none);
 problem.Aineq = [];  problem.Aeq = [];
