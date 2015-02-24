@@ -91,7 +91,7 @@ end
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-%           Non-linear constraint function for single shooting            %
+%           Non-linear constraint function for multiple shooting          %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 function [C, Ceq,tTraj,zTraj] = nonLinCst(decVar,target,P)

@@ -12,14 +12,23 @@ function plotSoln(traj, target, param)
 
 plotBackground(target,param);  hold on;
 
+color = 'k';
+message = '';
+if isfield(traj,'success')
+    if ~traj.success
+        color = 'r';
+        message = 'FAILED';
+    end
+end
+
 % Plot the trajectory
 x = traj.x;         y = traj.y;
 dx = traj.dx;       dy = traj.dy;
-plot(x,y,'k-','LineWidth',3); 
+plot(x,y,'LineWidth',3,'Color',color); 
 
 %%% Add labels and title
 objVal = objective(dx(1),dy(1));
-title(sprintf('Trajectory via %s   (cost = %6.3f)',traj.method ,objVal));
+title(sprintf('Trajectory via %s   (cost = %6.3f) %s',traj.method ,objVal,message));
 xlabel('Y  Position')
 ylabel('X  Position')
 hold off;

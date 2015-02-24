@@ -23,7 +23,7 @@ function soln = cannon_collocation(guess,target,param)
 global ITER_LOG_COLLOCATION;  %Used for diagnostics and visualization only
 ITER_LOG_COLLOCATION = [];
 
-P.nGrid = param.collocation.nGrid;
+P.nGrid = param.collocation.nSegment + 1;
 P.c = param.dynamics.c;
 
 %%% Run a simulation to get the initial guess:
@@ -33,12 +33,11 @@ traj = simulateCannon(init,P);
 guess.T = traj.t(end);  %Trajectory duration
 
 %%% Break the guess trajectory at segment bounds:
-guess.t = linspace(0,guess.T,P.nSegment+1); guess.t(end) = [];
-guess.z = [traj.x; traj.y; traj.dx; traj.dy]';
+guess.z = [traj.x; traj.y; traj.dx; traj.dy];
 
 %%% Store the initial guess for the problem:
 nState = 4;  %Number of states in the problem (x,y,dx,dy)
-problem.x0 = [guess.T, reshape(guess.z,1,nState*P.nSegment)];
+problem.x0 = [guess.T, reshape(guess.z,1,nState*P.nGrid)];
 problem.lb = [];    % Lower bound on decision variables
 problem.ub = [];   % Upper bound on decision variables
 
@@ -79,6 +78,12 @@ soln.method = 'Direct Collocation';
 
 %%% Run diagnostics on the solution if desired:
 if param.diagnostics.enable
+    for i=1:length(ITER_LOG_COLLOCATION)
+        decVar = ITER_LOG_COLLOCATION(i).decVar;
+        dt = decVar(1)/param.collocation.nSegment;
+        z = reshape(decVar(2:end),nState,P.nGrid);
+        ITER_LOG_COLLOCATION(i).defect = getDefect(dt,z,P.c);
+    end
     diagnostics_collocation(target,param)
 else
     figure(param.diagnostics.figNum.collocation); clf;
@@ -89,7 +94,7 @@ end
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-%           Non-linear constraint function for single shooting            %
+%           Non-linear constraint function for collocation                %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 function [C, Ceq,tTraj,zTraj] = nonLinCst(decVar,target,P)
@@ -104,25 +109,32 @@ function [C, Ceq,tTraj,zTraj] = nonLinCst(decVar,target,P)
 % John T. Betts
 % Practical Methods for Optimal Control and Estimation Using Nonlinear
 % Programming. 2010.
+%
+% Another good reference is:
+% "A Survey of numerical methods for optimal control"
+%  - Anil Rao, 2009, Advances in Astronautical Sciences
+%
 
 nState = 4;  %Number of states in the problem (x,y,dx,dy)
 nGrid = P.nGrid;
 tEnd = decVar(1);
-z = reshape(decVar(2:end),nState,P.nSegment);
+z = reshape(decVar(2:end),nState,nGrid);
 
 % Parallel quadrature integration between each pair of collocation points
-t = linspace(0,tEnd,nGrid);
-d = getDefect(t,z,P.c); %Simulate the trajectory
+dt = tEnd/(nGrid-1);
+d = getDefect(dt,z,P.c); %Simulate the trajectory
+
+% Compute the boundary conditions:
+BoundaryInit = z(1:2, 1); %Initial Position
+BoundaryFinal = z(1:2, end) - [target.x; target.y]; %Final Position
 
 % Pack up the constraints:
 C = [];  %No inequality constraints
-Ceq = reshape(d,4*(nGrid-1),1);
+Ceq = [BoundaryInit; reshape(d,4*(nGrid-1),1); BoundaryFinal];
 
 if nargout==4  %Only used for post-processing  --  return trajectory
-    tTraj = t;
+    tTraj = linspace(0,tEnd,P.nGrid+1);
     zTraj = z;
-    %%%% HACK %%%% Probably should show the piece-wise quadratic curve,
-    %%%% since that is what we are actually solving for.
 end
 
 end
@@ -132,7 +144,7 @@ end
 %                 Compute the Defects - Direct Collocation                %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
-function d = getDefect(t,z,c)
+function d = getDefect(dt,z,c)
 %
 % Compute defects via hermite simpson quadrature:
 %
@@ -144,9 +156,12 @@ function d = getDefect(t,z,c)
 %
 % zBar(k+1) = (1/2)*(z(k)+z(k+1)) + (dt/8)*(f(k) - f(k+1))
 %
+% Reference:
+% "A Survey of numerical methods for optimal control"
+%  - Anil Rao, 2009, Advances in Astronautical Sciences
+%
 
 %%% Some useful quantities:
-dt = diff(t); 
 zLow = z(:,1:(end-1));
 zUpp = z(:,2:end);
 

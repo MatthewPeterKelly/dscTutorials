@@ -7,3 +7,4 @@ This directory contains a progression of tutorials that teach transcription meth
   * Cannon Targeting 
     - Single Shooting
     - Multiple Shooting
+    - Collocation (Hermite-Simpson)
