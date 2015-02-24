@@ -2,23 +2,23 @@
 
 ## Overview:
 This directory contains Matlab code for solving the optimal trajectory for aiming a cannon with non-negligable quadratic drag on the cannon ball. The optimization problem is transcribed using three different methods: 
-    - Single Shooting
-    - Multiple Shooting
-    - Collocation (Hermite-Simpson)
+- Single Shooting
+- Multiple Shooting
+- Collocation (Hermite-Simpson)
 
 ## Entrypoint Scripts
-    - MAIN_cannon.m - runs the main tutorial, including animations
-    - TEST_cannonDynamics.m - simple forward simulation of dynamics with event detection for the ground
-    - TEST_cannonFeasibility.m - batch run forward simulations to understand relationship between initial launch speed and range.
+- MAIN_cannon.m - runs the main tutorial, including animations
+- TEST_cannonDynamics.m - simple forward simulation of dynamics with event detection for the ground
+- TEST_cannonFeasibility.m - batch run forward simulations to understand relationship between initial launch speed and range.
 
 ## Key Functions:
-	- cannon_singleShooting.m
-	- cannon_collocation.m
-	- cannon_multipleShooting.m
+- cannon_singleShooting.m
+- cannon_collocation.m
+- cannon_multipleShooting.m
 
- ## Implementation Details
+## Implementation Details
  
- In all cases I use the same exact initialization, based off of a forward simulation with event detection. This is not the best initialization for each method, but it provides some consistency between transcription methods and is sufficient.
+In all cases I use the same exact initialization, based off of a forward simulation with event detection. This is not the best initialization for each method, but it provides some consistency between transcription methods and is sufficient.
 
 I used Matlab's FMINCON optimization algorithm, although similar results could be obtained with other programs, such as SNOPT or IPOPT.
 
