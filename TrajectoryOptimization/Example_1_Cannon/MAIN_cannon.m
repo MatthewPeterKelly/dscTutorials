@@ -52,27 +52,28 @@ param.dynamics.c = 0.4;  %Quadratic drag coefficient
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% Set up the grid discretization for each method:
-param.singleShooting.nGrid = 20; 
-param.multipleShooting.nSegment = 10;
-param.multipleShooting.nSubStep = 2;
+param.singleShooting.nGrid = 24; 
+param.multipleShooting.nSegment = 8;
+param.multipleShooting.nSubStep = 3;
+param.collocation.nGrid = 24;
 
 %%% Parameters for diagnostics (visualization only)
 param.diagnostics.enable = true;   %Enable plotting and log iterations?
-param.diagnostics.animationDuration = 6;  %(seconds) How long is the animation?
+param.diagnostics.animationDuration = 8;  %(seconds) How long is the animation?
 param.diagnostics.writeGif = false;   %Save animation to a gif?
 param.diagnostics.gifPixelDim = [800,400];  %How big of a gif to make?
 param.diagnostics.figNum.singleShooting = 10;
 param.diagnostics.figNum.multipleShooting = 11;
+param.diagnostics.figNum.collocation = 12;
 
-% Use single shooting to find the solution:
-soln.singleShooting = cannon_singleShooting(guess,target,param);
-figure(22); clf; plotSoln(soln.singleShooting, target, param);
+% % Use single shooting to find the solution:
+% soln.singleShooting = cannon_singleShooting(guess,target,param);
+% 
+% % Use multiple shooting to find the solution:
+% soln.multipleShooting = cannon_multipleShooting(guess,target,param);
 
-% Use multiple shooting to find the solution:
-soln.multipleShooting = cannon_multipleShooting(guess,target,param);
-figure(23); clf; plotSoln(soln.multipleShooting, target, param);
-
-
+% Use collocation to find the solution:
+soln.collocation = cannon_collocation(guess,target,param);
 
 
 

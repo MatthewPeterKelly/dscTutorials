@@ -1,5 +1,5 @@
-function soln = cannon_multipleShooting(guess,target,param)
-% soln = cannon_multipleShooting(guess,target,param)
+function soln = cannon_collocation(guess,target,param)
+% soln = cannon_collocation(guess,target,param)
 %
 % This function uses single shooting to solve the cannon problem.
 %
@@ -20,12 +20,10 @@ function soln = cannon_multipleShooting(guess,target,param)
 %   soln.dy
 %
 
-global ITER_LOG_MULTIPLESHOOTING;  %Used for diagnostics and visualization only
-ITER_LOG_MULTIPLESHOOTING = [];
+global ITER_LOG_COLLOCATION;  %Used for diagnostics and visualization only
+ITER_LOG_COLLOCATION = [];
 
-P.nSegment = param.multipleShooting.nSegment;
-P.nSubStep = param.multipleShooting.nSubStep;
-P.nGrid = P.nSegment*P.nSubStep;
+P.nGrid = param.collocation.nGrid;
 P.c = param.dynamics.c;
 
 %%% Run a simulation to get the initial guess:
@@ -36,7 +34,7 @@ guess.T = traj.t(end);  %Trajectory duration
 
 %%% Break the guess trajectory at segment bounds:
 guess.t = linspace(0,guess.T,P.nSegment+1); guess.t(end) = [];
-guess.z = interp1(traj.t', [traj.x; traj.y; traj.dx; traj.dy]', guess.t', 'spline')';
+guess.z = [traj.x; traj.y; traj.dx; traj.dy]';
 
 %%% Store the initial guess for the problem:
 nState = 4;  %Number of states in the problem (x,y,dx,dy)
@@ -77,13 +75,13 @@ soln.dx = zTraj(3,:);
 soln.dy = zTraj(4,:);
 soln.success = exitFlag == 1;
 soln.cost = fVal;
-soln.method = 'Multiple Shooting';
+soln.method = 'Direct Collocation';
 
 %%% Run diagnostics on the solution if desired:
 if param.diagnostics.enable
-    diagnostics_multipleShooting(target,param)
+    diagnostics_collocation(target,param)
 else
-    figure(param.diagnostics.figNum.multipleShooting); clf;
+    figure(param.diagnostics.figNum.collocation); clf;
     plotSoln(soln, target, param);
 end
 
@@ -97,65 +95,74 @@ end
 function [C, Ceq,tTraj,zTraj] = nonLinCst(decVar,target,P)
 % This is the key function!
 % There are two key constraints here: Boundary Conditions & Dynamics
-% The dynamics are implemented using a multiple simulations
-% The decision variables are time, followed by the states at the start of
-% each trajectory segment.
+% The dynamics are using hermite-simpson quadrature between grid points
+% The decision variables are time, followed by the states at each
+% collocation point.
 % There are constraints placed on both the initial and final states
-% The simulation is implemented using 4th-order runge-kutta*.
+% 
+% The details of the method are described in section 4.5 of the book by
+% John T. Betts
+% Practical Methods for Optimal Control and Estimation Using Nonlinear
+% Programming. 2010.
 
 nState = 4;  %Number of states in the problem (x,y,dx,dy)
-nSegment = P.nSegment;
+nGrid = P.nGrid;
 tEnd = decVar(1);
-z0 = reshape(decVar(2:end),nState,P.nSegment);
+z = reshape(decVar(2:end),nState,P.nSegment);
 
-% Run a simulation from the start of each segment, in parallel
-nSub = P.nSubStep;  %Number of sub-steps for the integration method
-tSim = linspace(0,tEnd/nSegment, nSub+1);
-z = rk4_cannon(tSim,z0,P.c); %Simulate the trajectory
-% Index Info:  z(nState,nSegment,nSubStep)
+% Parallel quadrature integration between each pair of collocation points
+t = linspace(0,tEnd,nGrid);
+d = getDefect(t,z,P.c); %Simulate the trajectory
 
-%%% Boundary Value Constraints:
-BoundaryInit = [z(1,1,1); z(2,1,1)]; %Initial Position
-BoundaryFinal = [z(1,end,end); z(2,end,end)]...
-    - [target.x; target.y]; %Final Position
-
-%%% Defect Constraints:
-zEnd = z(:, 1:(end-1), end);  %States at the end of a segment
-zStart = z(:, 2:end, 1);   %States at the beginning of a segment
-Defects = reshape(zStart-zEnd,nState*(nSegment-1),1);
-
+% Pack up the constraints:
 C = [];  %No inequality constraints
-Ceq = [BoundaryInit; Defects; BoundaryFinal];  %Boundary Condition
+Ceq = reshape(d,4*(nGrid-1),1);
 
 if nargout==4  %Only used for post-processing  --  return trajectory
-
-    tTraj = zeros(1,nSegment*nSub+1);
-    zTraj = zeros(nState,nSegment*nSub+1);
-    
-    %Stitch together the trajectory
-    idx = 0;
-    
-    tSegment = linspace(0,tEnd,nSegment+1); tSegment(end) = [];
-    for i=1:nSegment  %Slow looping, but only run once, so not too bad
-        for j=1:nSub
-            idx = idx+1;
-            tTraj(idx) = tSim(j) + tSegment(i);
-            zTraj(:,idx) = z(:,i,j);
-        end
-    end
-    tTraj(end) = decVar(1);
-    zTraj(:,end) = z(:,end,end);
+    tTraj = t;
+    zTraj = z;
+    %%%% HACK %%%% Probably should show the piece-wise quadratic curve,
+    %%%% since that is what we are actually solving for.
 end
 
 end
 
-% * I use a fixed-order method (rather than ode45) because of the improved
-% consistency in the evaluation (the fixed-order method performs the exact
-% same arithmetic operations on every call, where a variable order might
-% not - for example, by adjusting the grid spacing, which can cause noise
-% in the gradient estimates in the optimization method).
 
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+%                 Compute the Defects - Direct Collocation                %
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
+function d = getDefect(t,z,c)
+%
+% Compute defects via hermite simpson quadrature:
+%
+% f = dynamics(t,z)
+%
+% d(k) = z(k+1) - z(k) - (dt/6)*(f(k) + 4*fBar(k+1) + f(k+1))
+%  
+% fBar(k+1) = dynamics(t(k) + dt/2, zBar(k+1))
+%
+% zBar(k+1) = (1/2)*(z(k)+z(k+1)) + (dt/8)*(f(k) - f(k+1))
+%
+
+%%% Some useful quantities:
+dt = diff(t); 
+zLow = z(:,1:(end-1));
+zUpp = z(:,2:end);
+
+%%% Compute the dynamics at each grid point:
+f = cannonDynamics([],z,c);  %no time dependence
+fLow = f(:,1:(end-1));
+fUpp = f(:,2:end);
+
+%%% Compute the cannon dynamics at intermediate point:
+zBar = 0.5*(zLow + zUpp) + (dt/8).*(fLow-fUpp);
+fBar = cannonDynamics([],zBar,c);
+
+%%% Compute the defects:
+d = zUpp - zLow - (dt/6).*(fLow + 4*fBar + fUpp);
+
+end
 
 
 
@@ -168,7 +175,7 @@ function stop = outFun(decVar,optimVal,state)
 % This function is used for logging the progress of fmincon throughout the
 % optimization run. It does not affect the optimization process.
 
-global ITER_LOG_MULTIPLESHOOTING;  %Keeping track of iteration details
+global ITER_LOG_COLLOCATION;  %Keeping track of iteration details
 
 stop = false;
 
@@ -176,8 +183,8 @@ switch state
     case 'init'
     case 'iter'
         iter = optimVal.iteration+1;
-        ITER_LOG_MULTIPLESHOOTING(iter).optimVal = optimVal;
-        ITER_LOG_MULTIPLESHOOTING(iter).decVar = decVar;
+        ITER_LOG_COLLOCATION(iter).optimVal = optimVal;
+        ITER_LOG_COLLOCATION(iter).decVar = decVar;
     case 'done'
     otherwise
 end
