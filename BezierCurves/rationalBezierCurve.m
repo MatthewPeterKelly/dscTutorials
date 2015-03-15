@@ -1,7 +1,8 @@
 function x = rationalBezierCurve(p,w,t,tSpan)
 % x = bezierCurve(p,t,tSpan)
 %
-% This function evaluates a rational bezier curve.
+% This function evaluates a rational bezier curve, defined by points p and
+% weights w.
 %
 % INPUTS:
 %   p = [nCurve x nPoint] = control points
@@ -13,10 +14,7 @@ function x = rationalBezierCurve(p,w,t,tSpan)
 %   x = [nCurve x nTime] = bezier curve, evaluated at t
 %
 % NOTES:
-%   It is not advisable to use this function for high-order polynomials, as
-%   the recursive evaluation will propagate numerical instabilities. For
-%   high-order function approximation, it is better to use the barycentric
-%   form of the Chebyshev polynomials, or something similar.
+%   It is not advisable to use this function for high-order polynomials.
 %
 
 [nCurve, nPoint] = size(p);

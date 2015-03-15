@@ -2,7 +2,7 @@ function x = bezierCurve(p,t,tSpan)
 % x = bezierCurve(p,t,tSpan)
 %
 % This function evaluates a bezier curve, defined by the set of control
-% points p, at each value in t, using a recursive algorithm.
+% points p, at each value in t.
 %
 % INPUTS:
 %   p = [nCurve x nPoint] = control points
@@ -13,41 +13,21 @@ function x = bezierCurve(p,t,tSpan)
 %   x = [nCurve x nTime] = bezier curve, evaluated at t
 %
 % NOTES:
-%   It is not advisable to use this function for high-order polynomials, as
-%   the recursive evaluation will propagate numerical instabilities. For
-%   high-order function approximation, it is better to use the barycentric
-%   form of the Chebyshev polynomials, or something similar.
+%   It is not advisable to use this function for high-order polynomials.
 %
 
 [nCurve, nPoint] = size(p);
+nTime = length(t);
 
-% Rescale time to [0,1]
-tt = ones(nCurve,1)*(t-tSpan(1))/diff(tSpan);
+t = (t-tSpan(1))/diff(tSpan);
 
-% Call the recursive version of the function
-x = bezierKernel(p,tt,1,nPoint);
-
+%%% Compute the numerator and denominator:
+x = zeros(nCurve,nTime);
+n = nPoint - 1;
+for i=0:n
+    tt = (t.^i).*(1-t).^(n-i);
+    binom = nchoosek(n,i);
+    x = x + binom*p(:,i+1)*tt;
 end
-
-%%%% SUB FUNCTIONS: %%%%
-
-function x = bezierKernel(p,t,iLow,iUpp)
-%
-% INPUTS:
-%   p = [nCurve x nPoint] = control points
-%   t = [nCurve x nTime] = time;  0 < t < 1
-%
-% OUTPUTS:
-%   x = [nCurve x nTime] = bezier curve, evaluated at t
-%
-
-if iLow ==iUpp  %Reached base case - end recursion
-    x = p(:,iLow)*ones(1,size(t,2));
-else
-    xLow = bezierKernel(p,t, iLow, iUpp-1);
-    xUpp = bezierKernel(p,t, iLow+1, iUpp);
-    x = (1-t).*xLow + t.*xUpp;
-end
-
 
 end

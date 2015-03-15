@@ -2,7 +2,7 @@
 %
 % This script runs a simple demo of a rational bezier curve
 
-order = 4;
+order = 5;
 
 p = rand(2,order+1);
 w = 0.1+rand(1,order+1);   %Must be positive for convex hull property to hold!
