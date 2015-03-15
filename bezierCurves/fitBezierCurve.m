@@ -1,5 +1,5 @@
 function [p,w, fVal, exitFlag] = fitBezierCurve(t,x,nPoint,tSpan, xBnd)
-% [p,w,fVal,exitFlag] = fitBezierCurve(t,x,order,tSpan)
+% [p,w, fVal, exitFlag] = fitBezierCurve(t,x,nPoint,tSpan, xBnd)
 %
 % This function fits a rational bezier curve to the data x(t), using a
 % bezier curve with n points.
@@ -16,6 +16,8 @@ function [p,w, fVal, exitFlag] = fitBezierCurve(t,x,nPoint,tSpan, xBnd)
 %   w = [1 x nPoint] = weights for each control point
 %   fVal = mean-square-error in function fit
 %   exitFlag = fmincon exit flag
+%
+% See also: bezierCurve, rationalBezierCurve
 %
 
 nCurve = size(x,1);

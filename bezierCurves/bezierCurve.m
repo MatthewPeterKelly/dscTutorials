@@ -15,6 +15,8 @@ function x = bezierCurve(p,t,tSpan)
 % NOTES:
 %   It is not advisable to use this function for high-order polynomials.
 %
+% See also: RATIONALBEZIERCURVE, FITBEZIERCURVE
+%
 
 [nCurve, nPoint] = size(p);
 nTime = length(t);

@@ -1,5 +1,5 @@
 function x = rationalBezierCurve(p,w,t,tSpan)
-% x = bezierCurve(p,t,tSpan)
+% x = rationalBezierCurve(p,w,t,tSpan)
 %
 % This function evaluates a rational bezier curve, defined by points p and
 % weights w.
@@ -15,6 +15,8 @@ function x = rationalBezierCurve(p,w,t,tSpan)
 %
 % NOTES:
 %   It is not advisable to use this function for high-order polynomials.
+%
+% See also: BEZIERCURVE, FITBEZIERCURVE
 %
 
 [nCurve, nPoint] = size(p);
