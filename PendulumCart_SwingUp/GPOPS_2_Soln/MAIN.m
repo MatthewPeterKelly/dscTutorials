@@ -5,13 +5,13 @@
 clear; clc; 
 
 %Load solution from file?    ( '' for none )
-guessFile = 'oldSoln.mat'; %  'oldSoln.mat'  OR   ''
+guessFile = '';%'oldSoln.mat'; %  'oldSoln.mat'  OR   ''
 
 %Physical parameters
-auxdata.massBob = 0.8;   %Mass of the pendulum
+auxdata.massBob = 0.2;   %Mass of the pendulum
 auxdata.massCart = 1;   %Mass of the cart
 auxdata.gravity = 9.81;   %Set negative to have 0 be the unstable equilibrium
-auxdata.lengthPendulum = 0.3;   %Length of the pendulum
+auxdata.lengthPendulum = 0.5;   %Length of the pendulum
 
 %Timing parameters:
 t0 = 0; 
@@ -87,11 +87,11 @@ setup.auxdata = auxdata;
 setup.bounds = bounds;
 setup.guess = guess;
 setup.nlp.solver = 'ipopt'; % {'ipopt','snopt'}
-setup.derivatives.supplier = 'sparseCD';
-setup.derivatives.derivativelevel = 'second';
+setup.derivatives.supplier = 'adigator';%'sparseCD';  %'adigator'
+setup.derivatives.derivativelevel = 'first';%'second';
 setup.mesh.method = 'hp-PattersonRao';
-setup.mesh.tolerance = 1e-8;
-setup.mesh.maxiteration = 45;
+setup.mesh.tolerance = 1e-6;
+setup.mesh.maxiteration = 4;
 setup.mesh.colpointsmin = 4;
 setup.mesh.colpointsmax = 10;
 setup.method = 'RPM-Integration';

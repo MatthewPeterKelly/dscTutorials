@@ -28,6 +28,6 @@ int main() {
 	}
 
 	fclose(dataFile);
-	system("./plotData.py");
+	// system("./plotData.py");  // Calls python plotting script
 	return 0;
 }
