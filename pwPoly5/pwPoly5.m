@@ -46,11 +46,15 @@ function x = subFun1(T,P,t,idx)
 x = zeros(size(t));
 for i=1:(length(T)-1)
     if sum(idx==i)>0
-        tt = (t(idx==i)-T(i))/(T(i+1)-T(i));
+        dt = (T(i+1)-T(i));
+        tt = (t(idx==i)-T(i))/dt;
+        p = P(1,:);
+        dp = P(2,:)*dt;
+        ddp = P(3,:)*dt*dt;
         x(idx==i) = ...
             autoGen_pwPoly5(tt,...
-            P(1,i),P(2,i),P(3,i),...
-            P(1,i+1),P(2,i+1),P(3,i+1));
+            p(i),dp(i),ddp(i),...
+            p(i+1),dp(i+1),ddp(i+1));
     end
 end
 
@@ -64,11 +68,15 @@ x = zeros(size(t));
 dx = zeros(size(t));
 for i=1:(length(T)-1)
     if sum(idx==i)>0
-        tt = (t(idx==i)-T(i))/(T(i+1)-T(i));
+        dt = (T(i+1)-T(i));
+        tt = (t(idx==i)-T(i))/dt;
+        p = P(1,:);
+        dp = P(2,:)*dt;
+        ddp = P(3,:)*dt*dt;
         [x(idx==i), dx(idx==i)] = ...
             autoGen_pwPoly5(tt,...
-            P(1,i),P(2,i),P(3,i),...
-            P(1,i+1),P(2,i+1),P(3,i+1));
+            p(i),dp(i),ddp(i),...
+            p(i+1),dp(i+1),ddp(i+1));
     end
 end
 
@@ -83,11 +91,15 @@ dx = zeros(size(t));
 ddx = zeros(size(t));
 for i=1:(length(T)-1)
     if sum(idx==i)>0
-        tt = (t(idx==i)-T(i))/(T(i+1)-T(i));
+        dt = (T(i+1)-T(i));
+        tt = (t(idx==i)-T(i))/dt;
+        p = P(1,:);
+        dp = P(2,:)*dt;
+        ddp = P(3,:)*dt*dt;
         [x(idx==i), dx(idx==i), ddx(idx==i)] = ...
             autoGen_pwPoly5(tt,...
-            P(1,i),P(2,i),P(3,i),...
-            P(1,i+1),P(2,i+1),P(3,i+1));
+            p(i),dp(i),ddp(i),...
+            p(i+1),dp(i+1),ddp(i+1));
     end
 end
 

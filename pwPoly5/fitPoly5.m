@@ -17,7 +17,7 @@ function P = fitPoly5(T,t,x)
 %     --> All inputs contain only real numbers
 %     --> T(1) <= min(t) <= T(end)
 %
-% See Also: pwPoly5, pwPoly5p
+% See Also: pwPoly5 fitPoly5p
 
 %%%% Create a starting guess for optimization:
 dt = diff(t);
