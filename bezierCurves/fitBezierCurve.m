@@ -25,7 +25,7 @@ nCurve = size(x,1);
 tNormalized = (t-tSpan(1))/diff(tSpan);
 wGuess = 0.5*ones(1,nPoint);
 tGuess = linspace(0,1,nPoint);
-pGuess = interp1(tNormalized',x',tGuess)';
+pGuess = interp1(tNormalized',x',tGuess,'linear','extrap')';
 zGuess = packDecVar(pGuess,wGuess);
 
 wLow = zeros(1,nPoint);

@@ -23,7 +23,6 @@ nTime = length(t);
 
 t = (t-tSpan(1))/diff(tSpan);
 
-%%% Compute the numerator and denominator:
 x = zeros(nCurve,nTime);
 n = nPoint - 1;
 for i=0:n
