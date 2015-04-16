@@ -11,7 +11,7 @@ d = [0,4];  %Domain for the functions
 t = linspace(d(1),d(2),1000);
 x = chebyshevPoints(nChebPts,d);
 
-%%%% Attempt to ubild the project if the mex function does not exist
+%%%% Attempt to build the project if the mex function does not exist
 if ~exist('chebEval_mex','file')
     coder -build chebyshevMexProject.prj
 end

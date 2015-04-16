@@ -53,7 +53,7 @@ Input.z0 = z0;
 P.m = 0.1;
 P.c = 0.3;
 P.k = 100;
-userFunc = @(t,z)dynamics(t,z,P);
+userFunc = @(t,z)simpleHarmonicOscillator(z,P);
 Input.userFunc = userFunc;
 
 

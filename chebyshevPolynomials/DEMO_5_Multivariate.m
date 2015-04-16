@@ -23,7 +23,7 @@ P.c = 0.4;
 P.k = 100;
 
 %Function handle for the simple harmonic oscillator
-userFunc = @(t,z)dynamics(t,z,P);
+userFunc = @(t,z)simpleHarmonicOscillator(z,P);
 
 %Use ode45 to get the solution
 Options = odeset(...

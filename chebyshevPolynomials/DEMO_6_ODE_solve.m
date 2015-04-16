@@ -26,7 +26,7 @@ Input.z0 = z0;
 P.m = 0.03;
 P.c = 0.45;
 P.k = 100;
-userFunc = @(t,z)dynamics(t,z,P);
+userFunc = @(t,z)simpleHarmonicOscillator(z,P);
 Input.userFunc = userFunc;
 
 %Solve the problem with Chebyshev:

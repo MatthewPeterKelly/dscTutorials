@@ -1,5 +1,5 @@
-function dz = dynamics(~,z,P)
-%dz = dynamics(~,z,P)
+function dz = simpleHarmonicOscillator(z,P)
+%dz = simpleHarmonicOscillator(z,P)
 %
 % FUNCTION:
 %   This function is used to compute the dynamics of a simple harmonic
@@ -9,7 +9,7 @@ function dz = dynamics(~,z,P)
 %   t = [1 x Nt] input time vector. (NOT USED)
 %   z = [Ns x Nt] input state vector.
 %   P = struct of parameteres with fields:
-%       m = mass
+%       m = massls
 %       c = damping constant
 %       k = spring constant
 %
