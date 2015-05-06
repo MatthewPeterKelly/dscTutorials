@@ -42,7 +42,7 @@ end
 
 %Check if weights are needed:
 if nargout==2
-    w = weights(n);
+    w = weights(n)*diff(d)/2;
 end
 end
 

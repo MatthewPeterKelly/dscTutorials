@@ -20,6 +20,6 @@ function If = chebyshevIntegral(f,d)
 
 %Perform the integral
 ONE = ones(k,1);  %get the matrix size correct for .* operation
-If = cumsum(f.*(ONE*w))*diff(d)/2;
+If = cumsum(f.*(ONE*w));
 
 end
