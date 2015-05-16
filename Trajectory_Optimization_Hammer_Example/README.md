@@ -1,4 +1,4 @@
-Multiple Shooting Tutorial - Hammer Example
+# Multiple Shooting Tutorial - Hammer Example
 
 ===============================================
 
