@@ -1,4 +1,20 @@
 function D = chebyshevDifferentiationMatrix(n,d)
+% D = chebyshevDifferentiationMatrix(n,d)
+%
+% This function computes the chebyshev differentiation matrix.
+%
+% INPUTS:
+%   n = number of chebyshev nodes
+%   d = [low,upp] = domain of chebyshev polynomial
+%
+% OUTPUTS:
+%   D = chebyshev differentiation matrix: Df = (D*f')';
+%
+% NOTES:
+%  - Intended to be called by chebyshevDerivative.m. Do not call directly
+% unless there is a good reason not to use chebyshevDerivative.m
+%
+
 
 if nargin==1
     d = [-1,1];  %Default domain
