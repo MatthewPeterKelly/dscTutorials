@@ -43,10 +43,4 @@ plot(tt,xx(4,:),'b-','LineWidth',lineWidth);
 xlabel('t')
 ylabel('dq')
 
-subplot(2,3,6); hold on;
-plot(t,u(2,:),'k.','MarkerSize',markerSize);
-plot(tt,uu(2,:),'b-','LineWidth',lineWidth);
-xlabel('t')
-ylabel('T')
-
 end

@@ -3,8 +3,8 @@
 % This script runs trajectory optimization using orthogonal collocation
 
 % Number of points for initialization:
-config.nGrid = 9;
-config.nGuess = 25;
+config.nGrid = 11;
+config.nGuess = 2*config.nGrid;
 
 % Options for nlp solver (fmincon)
 config.options.nlp = optimset(...

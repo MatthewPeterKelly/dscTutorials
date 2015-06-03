@@ -17,7 +17,7 @@ t = linspace(0,tEnd,n);
 
 % Assume that the cart follows a sinusoidal trajectory, conserving CoM
 xAmp = l*m2/(m1+m2);  %CoM calculations...
-x = xAmp*sin(2*pi*t/tEnd);
+x = xAmp*sin(pi*t/tEnd);
 dx = xAmp*(2*pi/tEnd)*cos(2*pi*t/tEnd);
 ddx = -xAmp*(2*pi/tEnd)^2*sin(2*pi*t/tEnd);
 
@@ -27,11 +27,11 @@ dq = -sign(xAmp)*pi*ones(size(t))/tEnd;
 ddq = zeros(size(t));
 
 % Compute the inverse dynamics to produce this trajectory:
-[F,T] = autoGen_cartPoleInvDyn(q,dq,ddq,ddx,m1,m2,g,l);
+F = autoGen_cartPoleInvDyn(q,dq,ddq,ddx,m1,m2,g,l);
 
 % Store the result for return:
 guess.time = t;
 guess.state = [x;q;dx;dq];
-guess.control = [F;T];
+guess.control = F;
 
 end

@@ -5,7 +5,7 @@ function bounds = computeBounds(config)
 
 % Unpack physical parameters
 m1 = config.dyn.m1;
-m2 = config.dyn.m2;
+% m2 = config.dyn.m2;
 g = config.dyn.g;
 l = config.dyn.l;
 
@@ -23,7 +23,7 @@ bounds.state.lower = [-2*l; -2*pi; -10*l/wn; -10*pi/wn];
 bounds.state.upper = [2*l; 2*pi; 10*l/wn; 10*pi/wn];
 
 % Bounds on control:
-bounds.control.lower = [-4*m1*g; -1e-6];%-4*m2*g*l];
-bounds.control.upper = [4*m1*g; 1e-6];%4*m2*g*l];
+bounds.control.lower = -4*m1*g;
+bounds.control.upper = 4*m1*g;
 
 end

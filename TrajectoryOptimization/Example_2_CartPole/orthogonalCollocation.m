@@ -38,7 +38,6 @@ lb(xIdx.x2) = config.bounds.state.lower(2);
 lb(xIdx.x3) = config.bounds.state.lower(3);
 lb(xIdx.x4) = config.bounds.state.lower(4);
 lb(uIdx.u1) = config.bounds.control.lower(1);
-lb(uIdx.u2) = config.bounds.control.lower(2);
 ub = zeros(nDecVar,1);
 ub(tIdx) = config.bounds.duration.upper;
 ub(xIdx.x1) = config.bounds.state.upper(1);
@@ -46,7 +45,6 @@ ub(xIdx.x2) = config.bounds.state.upper(2);
 ub(xIdx.x3) = config.bounds.state.upper(3);
 ub(xIdx.x4) = config.bounds.state.upper(4);
 ub(uIdx.u1) = config.bounds.control.upper(1);
-ub(uIdx.u2) = config.bounds.control.upper(2);
 
 % Build the problem struct:
 problem.objective = @(z)( costFunctionWrapper(z,pack,weights) ); 
@@ -81,7 +79,7 @@ function [C, Ceq] = nonLinCon(z,pack,dyn)
 
 [t,x,u] = unPackDecVar(z,pack);
 
-dz = cartPoleDynamics(x,u,dyn);  
+dz = cartPoleDynamics(x,[u; zeros(size(u))],dyn);  
 
 dzTraj = chebyshevDerivative(x,[0,t]);
 
@@ -141,7 +139,6 @@ xIdx.x3 = x(3,:);
 xIdx.x4 = x(4,:);
 
 uIdx.u1 = u(1,:);
-uIdx.u2 = u(2,:);
 
 end
 
