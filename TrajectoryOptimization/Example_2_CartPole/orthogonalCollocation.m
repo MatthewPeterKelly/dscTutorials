@@ -1,16 +1,5 @@
 function traj = orthogonalCollocation(config)
 
-%
-%
-%
-%
-%%%% WORK IN PROGRESS %%%%
-%
-%
-%
-%
-
-
 n = config.nGrid;
 
 % Create the initial guess:
@@ -32,10 +21,14 @@ nDecVar = length(zGuess);
 % Boundary conditions:
 Aeq = zeros(4+4, nDecVar);
 beq = zeros(4+4, 1);
-Aeq(1:4, xIdx.init) = 1;
-beq(1:4) = config.bounds.initialState;
-Aeq(5:8, xIdx.final) = 1;
-beq(5:8) = config.bounds.finalState;
+for i=1:4
+Aeq(i, xIdx.init(i)) = 1;
+beq(i) = config.bounds.initialState(i);
+end
+for i=1:4
+Aeq(4+i, xIdx.final(i)) = 1;
+beq(4+i) = config.bounds.finalState(i);
+end
 
 % State and control bounds:
 lb = zeros(nDecVar,1);
@@ -72,8 +65,14 @@ problem.solver = 'fmincon';
 [zSoln,fSoln,exitFlag] = fmincon(problem);
 
 % Post-processing:
+[t,x,u] = unPackDecVar(zSoln,pack);
 
-%%%% TODO %%%%
+traj.time = chebyshevPoints(n,[0,t]);
+traj.state = x;
+traj.control = u;
+traj.objVal = fSoln;
+traj.exitFlag = exitFlag;
+traj.interp = @(zz,tt)( chebyshevInterpolate(zz,tt,[0,t]) );
 
 end
 
@@ -97,7 +96,7 @@ end
 function [t,x,u] = unPackDecVar(z,pack)
 
 nState = pack.nState;
-nControl = pack.Control;
+nControl = pack.nControl;
 nTime = pack.nTime;
 
 ns = nState*nTime;
@@ -107,8 +106,8 @@ iState = 1:ns;
 iControl = 1:nc;
 
 t = z(1);
-x = reshape(1+iState,nState,nTime);
-u = reshape(1+iState+iControl,nControl,nTime);
+x = reshape(z(1+iState),nState,nTime);
+u = reshape(z(1+iState(end)+iControl),nControl,nTime);
 
 end
 
@@ -152,7 +151,6 @@ function cost = costFunctionWrapper(z,pack,w)
 [t,x,u] = unPackDecVar(z,pack);
 
 % Clenshaw-Curtis Quadrature for integral cost function:
-cost = dot(w,costFunction(x,u,p));
-
+cost = dot(w,costFunction(t,x,u));
 
 end

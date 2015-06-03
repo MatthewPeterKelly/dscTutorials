@@ -11,15 +11,16 @@ p.l = 1;
 
 z0 = [...
     0;              %Initial horizontal position
-    (pi/180)*120;   %Initial angle of the pendulum (from stable config)
+    (pi/180)*170;   %Initial angle of the pendulum (from stable config)
     0;              %Initial velocity of cart
     0];             %initial rotation rate of pendulum
 
-u = [0;0];  %Disable actuators for now;
+%Simple PD controller
+u = @(z)( -[ 10*z(1) + 2*z(3) ; 10*z(2) + 2*z(4) ]  ); 
 
-tSpan = [0;4];   %Time span for simulation
+tSpan = [0;2];   %Time span for simulation
 
-dynFun = @(t,z)( cartPoleDynamics(z,u,p) );   %Function handle to give ode45
+dynFun = @(t,z)( cartPoleDynamics(z,u(z),p) );   %Function handle to give ode45
 sol = ode45(dynFun,tSpan,z0);  %Run simulation
 
 %Extract uniformly spaced samples via high-order interpolation
