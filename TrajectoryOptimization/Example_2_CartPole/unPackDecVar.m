@@ -15,6 +15,6 @@ ic = 1:(nc(1)*nc(2));
 
 t = z(1);
 x = reshape(z(1+is),ns(1),ns(2));
-u = reshape(z(1+is(end)+ic, nc(1),nc(2)));
+u = reshape(z(1+is(end)+ic), nc(1),nc(2));
 
 end

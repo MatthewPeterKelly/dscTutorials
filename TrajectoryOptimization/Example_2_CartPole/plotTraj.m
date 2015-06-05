@@ -8,10 +8,10 @@ t = traj.time;
 tt = linspace(t(1),t(end),150);
 
 x = traj.state;
-xx = traj.interp(traj.state,tt);
+xx = traj.interp.state(tt);
 
 u = traj.control;
-uu = traj.interp(traj.control,tt);
+uu = traj.interp.control(tt);
 
 subplot(2,3,1); hold on;
 plot(t,x(1,:),'k.','MarkerSize',markerSize);

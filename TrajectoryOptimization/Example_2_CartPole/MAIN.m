@@ -3,8 +3,7 @@
 % This script runs trajectory optimization using orthogonal collocation
 
 % Number of points for initialization:
-config.nGrid = 11;
-config.nGuess = 2*config.nGrid;
+config.grid.nTrajPts = 11;
 
 % Options for nlp solver (fmincon)
 config.options.nlp = optimset(...
@@ -22,7 +21,7 @@ config.dyn.l = 1;
 config.guess = computeGuess(config);
 
 % Bounds:
-config.bounds = computeBounds(config);
+[config.bounds, config.userData] = computeBounds(config);
 
 % Compute the optimal trajectory:
 traj = orthogonalCollocation(config);

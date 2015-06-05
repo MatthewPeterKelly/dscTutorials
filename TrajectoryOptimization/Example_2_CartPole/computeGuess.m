@@ -10,7 +10,7 @@ m2 = config.dyn.m2;
 g = config.dyn.g;
 l = config.dyn.l;
 
-n = config.nGuess;  %Number of grid points in guess
+n = config.grid.nTrajPts;  %Number of grid points in guess
 
 tEnd = 2*pi*sqrt(l/g);   %Period of a simple pendulum
 t = linspace(0,tEnd,n);

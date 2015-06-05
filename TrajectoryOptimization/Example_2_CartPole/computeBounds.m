@@ -1,4 +1,4 @@
-function bounds = computeBounds(config)
+function [bounds, userData] = computeBounds(config)
 % bounds = computeBounds(config)
 %
 % This function computes the bounds for the state and control
@@ -10,8 +10,8 @@ g = config.dyn.g;
 l = config.dyn.l;
 
 % Boundry values
-bounds.initialState = [0;0;0;0];
-bounds.finalState = [config.guess.state(1:2,end);0;0];
+userData.initialState = [0;0;0;0];
+userData.finalState = [config.guess.state(1:2,end);0;0];
 
 % Bounds on duration (total trajectory time)
 wn = sqrt(l/g);
