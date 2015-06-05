@@ -1,6 +1,9 @@
-function [C, Ceq] = boundaryConstraint(t,x0,xF,userData)
+function [C, Ceq] = boundaryConstraint(t0,tF,x0,xF,userData)
 
 C = [];
-Ceq = [x0 - userData.initialState; xF-userData.finalState];
+Ceq = [
+    t0; % Start at t==0
+    x0 - userData.initialState;  %Initial state  
+    xF-userData.finalState];   %Final state
 
 end
