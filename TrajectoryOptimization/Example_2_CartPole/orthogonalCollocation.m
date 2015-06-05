@@ -3,7 +3,7 @@ function traj = orthogonalCollocation(config)
 n = config.grid.nTrajPts;
 
 % Chebyshev points and weights on the default domain
-[xx,ww] = chebyshevpoints(m,[-1,1]);
+[xx,ww] = chebyshevPoints(n,[-1,1]);
 cheb.xx = xx;
 cheb.ww = ww;
 

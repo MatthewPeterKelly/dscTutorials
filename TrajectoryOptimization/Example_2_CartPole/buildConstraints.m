@@ -1,11 +1,22 @@
 function [problem, pack] = buildConstraints(guess,config)
 
 % Pack up guess:
-[zGuess,pack] = packDecVar(guess.duration,guess.state,guess.control);
+tSpan = guess.time([1,end]);
+[zGuess,pack] = packDecVar(tSpan,guess.state,guess.control);
 nDecVar = length(zGuess);
 
 %%%% Build linear constraints:
 [tIdx,xIdx,uIdx] = getIndex(pack);
+
+
+
+
+
+error('TODO: Deal with equality constraints on decision variables...')
+
+
+
+
 
 % State and control bounds:  (bounds on input)
 lb = zeros(nDecVar,1);
