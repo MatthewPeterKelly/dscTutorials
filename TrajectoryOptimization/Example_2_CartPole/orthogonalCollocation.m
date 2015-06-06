@@ -49,11 +49,8 @@ dzTraj = chebyshevDerivative(x,tSpan);
 
 defect = dz-dzTraj;
 
-% user-defined boundary constraints:
-[bndIneq, bndEq] = func.endpointConstraint(t(1),t(end),x(:,1),x(:,end));
-
-C = bndIneq;
-Ceq = [reshape(defect,numel(defect),1); bndEq];
+C = [];
+Ceq = reshape(defect,numel(defect),1);
 
 end
 
@@ -63,7 +60,7 @@ function cost = costFunctionWrapper(z,pack,func,cheb)
 
 [t, w] = chebyshevScalePoints(cheb.xx,cheb.ww,tSpan);
 
-c = func.pathCost(t,x,u);  %Cost integrand
+c = func.costIntegrand(t,x,u);  %Cost integrand
 cost = dot(w,c); % Clenshaw-Curtis Quadrature
 
 end
