@@ -11,9 +11,9 @@ cheb.ww = ww;
 tSpan = [config.guess.time(1),config.guess.time(2)];
 guess.time = chebyshevScalePoints(xx,ww,tSpan);
 guess.state = interp1(...
-    config.guess.time', config.guess.state', guess.time')';
+    config.guess.time',  config.guess.state',  guess.time')';
 guess.control = interp1(...
-    config.guess.time', config.guess.control', guess.time')';
+    config.guess.time',  config.guess.control',  guess.time')';
 
 % Create a list of all linear constraints, then add function handles:
 [problem, pack] = buildConstraints(guess,config);

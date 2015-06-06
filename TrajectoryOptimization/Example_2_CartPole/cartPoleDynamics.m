@@ -8,7 +8,7 @@ function dz = cartPoleDynamics(z,u,p)
 %
 % INPUTS:
 %   z = [4, n] = state vector = [x;q;dx;dq]
-%   u = [2, n] = actuation vector = [F;T]
+%   u = [1, n] = actuation vector = F = force on cart
 %   p = struct of parameters:
 %       .m1 = cart mass
 %       .m2 = pendulum point-mass
@@ -25,7 +25,7 @@ dx = z(3,:);
 dq = z(4,:);
 
 F = u(1,:);
-T = u(2,:);
+T = zeros(1,length(F));
 
 [ddx,ddq] = autoGen_cartPoleDynamics(q,dq,F,T,p.m1,p.m2,p.g,p.l);
 

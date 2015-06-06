@@ -5,11 +5,6 @@ function [tIdx,xIdx,uIdx] = getIndex(pack)
 
 nDecVar = 2 + pack.nState(1)*pack.nState(2) + ...
     pack.nControl(1)*pack.nControl(2);
-[tIdx,x,u] = unPackDecVar(1:nDecVar,pack);
-
-xIdx.init = x(:,1);
-xIdx.final = x(:,end);
-xIdx.x = x;
-uIdx.u = u;
+[tIdx,xIdx,uIdx] = unPackDecVar(1:nDecVar,pack);
 
 end

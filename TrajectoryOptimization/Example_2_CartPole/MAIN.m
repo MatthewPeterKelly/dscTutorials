@@ -1,6 +1,8 @@
 % MAIN.m
 %
 % This script runs trajectory optimization using orthogonal collocation
+clc; clear;
+
 
 % Number of points for initialization:
 config.grid.nTrajPts = 11;
@@ -21,15 +23,11 @@ config.dyn.l = 1;
 config.guess = computeGuess(config);
 
 % Bounds:
-[config.bounds, config.bndCst] = computeBounds(config);
+config.bounds = computeBounds(config);
 
 % Create function handles to be called by optimization:
-config.function.dynamics = @(t,z,u)( cartPoleDynamics(z,[u;zeros(size(u))],config.dyn) );
-config.function.pathCost = @(t,z,u)( costFunction(t,z,u) );
-config.function.endpointCost = [];
-config.function.pathConstraint = [];
-config.function.endpointConstraint = @(t,z0,zF)( boundaryConstraint(t,z0,zF,config.bndCst) );
-
+config.function.dynamics = @(t,z,u)( cartPoleDynamics(z,u,config.dyn) );
+config.function.costIntegrand = @(t,z,u)( costFunction(t,z,u) );
 
 % Compute the optimal trajectory:
 traj = orthogonalCollocation(config);
