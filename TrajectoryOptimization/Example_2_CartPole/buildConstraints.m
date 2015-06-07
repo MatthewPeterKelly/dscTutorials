@@ -51,7 +51,7 @@ for i=1:nEq
    Aeq(i,eqIdx(i)) = 1;
 end
 
-% Inequality constraints
+% Inequality constraints    A*X  <= B
 Aineq = zeros(2*nIneq,nDecVar);
 bineq = zeros(2*nIneq,1);
 low = lb(~idxEq);
@@ -59,9 +59,9 @@ upp = ub(~idxEq);
 ineqIdx = index(~idxEq);
 for i=1:nIneq
     idx = 2*(i-1);
-   Aineq(idx+1,ineqIdx(i)) = 1; 
+   Aineq(idx+1,ineqIdx(i)) = -1; 
+   bineq(idx+1) = -low(i);
    Aineq(idx+2,ineqIdx(i)) = 1; 
-      bineq(idx+1) = low(i); 
    bineq(idx+2) = upp(i); 
 end
 
