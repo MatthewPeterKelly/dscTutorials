@@ -5,12 +5,12 @@ clc; clear;
 
 
 % Number of points for initialization:
-config.grid.nTrajPts = 11;
+config.grid.nTrajPts = 10;
 
 % Options for nlp solver (fmincon)
 config.options.nlp = optimset(...
     'Display','iter',...
-    'MaxIter',100,...
+    'MaxIter',250,...
     'MaxFunEvals',1e4);
 
 % Physical parameters for dynamics

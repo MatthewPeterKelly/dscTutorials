@@ -44,8 +44,8 @@ bounds.finalState.upper = bounds.finalState.lower;
 wn = sqrt(l/g);
 bounds.initialTime.lower = 0;
 bounds.initialTime.upper = 0;
-bounds.finalTime.lower = 0.1*(2*pi*wn);
-bounds.finalTime.upper = 10*(2*pi*wn);
+bounds.finalTime.lower = 0.5*(2*pi*wn);
+bounds.finalTime.upper = 4*(2*pi*wn);
 
 % Bounds on state:
 bounds.state.lower = [-2*l; -2*pi; -10*l/wn; -10*pi/wn];
