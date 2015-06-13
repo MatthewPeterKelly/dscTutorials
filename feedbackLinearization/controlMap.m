@@ -26,7 +26,6 @@ function u = controlMap(dq, v, dhRef, ddhRef, c, H, D, B, G)
 % u = [nControl, 1] = joint torque matrix
 %
 
-
 % Temp variables to keep the code readable:
 T1 = H-dhRef*c;
 T2 = T1/D;

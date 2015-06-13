@@ -46,10 +46,6 @@ ref.nGrid = 25;   %Number of grid points to store trajectory on
 ref.c = [1 0];   %phase variable = link one angle = c*q = [1 0]*[q1;q2]
 ref.H = [-1 1];  % Measurement variable = relative angle between links = H*q
 
-ref.wn = 15;   %Tracking frequency
-ref.xi = 0;  %Tracking damping ratio
-
-
 tRef = linspace(tSpan(1),tSpan(2),ref.nGrid);
 zRef = deval(sol,tRef);
 dzRef = zeros(size(zRef));
@@ -75,7 +71,9 @@ ddhRefddp = (ddhRef - dhRefdp.*ddpRef)./(dpRef.^2);
 % Represent trajectories as piecewise-polynomial
 ref.pp.h = pchip(pRef,hRef);
 ref.pp.dh = pchip(pRef,dhRefdp);
+ref.pp.dhdt = pchip(pRef,dhRef);
 ref.pp.ddh = pchip(pRef,ddhRefddp);
+
 
 % Check math using finite differences:
 check1.p = ref.c*z(1:2,:);
@@ -113,18 +111,46 @@ xlabel('p');
 %                  Run a controlled simulation:                           %
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
+%%%% TRACKING GAINS:
+ref.wn = 50;   %Tracking frequency
+ref.xi = 0.5;  %Tracking damping ratio
+
 ctrlFun = @(z)( controller(z,param,ref) );  %Control
 sysFun = @(t,z)( acrobotDynamics(z,ctrlFun(z),param) );  % Dynamics
 
+% z0 = z0 + 0.01*(1-2*rand(4,1));   % Add some error to make things interesting
+z0 = z0 + [0;0.05;0.2;0];   %Add deterministic error for repeatability
+
 % Run simulation:
-sol = ode45(sysFun,tSpan,z0);
-t = linspace(tSpan(1),tSpan(2),100);
-z = deval(sol,t);
-u = zeros(1,length(t));
-for i=1:length(t)
-    u(i) = ctrlFun(z(:,i));
+solCtrl = ode45(sysFun,tSpan,z0);
+tCtrl = linspace(tSpan(1),tSpan(2),100);
+zCtrl = deval(solCtrl,tCtrl);
+uCtrl = zeros(1,length(tCtrl));
+for i=1:length(tCtrl)
+    uCtrl(i) = ctrlFun(zCtrl(:,i));
 end
 
-% Plot the results:
-figure(4); clf; plotAcrobot(t,z,u,param)
 
+figure(4); clf; plotAcrobot(tCtrl,zCtrl,uCtrl,param);
+
+pCtrl = ref.c*zCtrl(1:2,:);
+hCtrl = ref.H*zCtrl(1:2,:);
+dhCtrl = ref.H*zCtrl(3:4,:);
+
+% Plot the results:
+figure(5); clf;
+subplot(3,1,1); hold on;
+plot(check2.p, check2.h, 'k.','MarkerSize',10);
+plot(pCtrl, hCtrl, 'b-');
+xlabel('p')
+ylabel('h')
+legend('ref','sim')
+subplot(3,1,2); hold on;
+plot(check2.p, ppval(ref.pp.dhdt,check2.p), 'k.','MarkerSize',10);
+plot(pCtrl, dhCtrl, 'b-');
+xlabel('p')
+ylabel('dh')
+subplot(3,1,3); hold on;
+plot(pCtrl, uCtrl, 'b-');
+xlabel('p')
+ylabel('u')

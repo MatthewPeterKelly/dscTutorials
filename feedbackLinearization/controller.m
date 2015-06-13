@@ -10,19 +10,17 @@ dq = [dq1;dq2];
 
 % Compute reference trajectories:
 p = ref.c*q;
-dp = ref.c*dq;
 hRef = ppval(ref.pp.h, p);
 dhRef = ppval(ref.pp.dh, p);
+dhRefdt = ppval(ref.pp.dhdt , p);
 ddhRef = ppval(ref.pp.ddh, p);
 h = ref.H*q;
-dh = ref.H*dq./dp;  %Chain rule again to make in terms of phase
+dhdt = ref.H*dq;
 
 % Linear controller:
 kp = ref.wn^2;
 kd = 2*ref.xi*ref.wn;
-v = kp*(h-hRef) + kd*(dh-dhRef);   %%%% HACK
-
-v = -v;  %%%% HACK
+v = kp*(hRef-h) + kd*(dhRefdt-dhdt);  
 
 % D*ddq + G = B*u
 [D,G,B] = autoGen_acrobotDynamics(...
