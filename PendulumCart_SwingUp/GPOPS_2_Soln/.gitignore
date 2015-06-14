@@ -1,0 +1,8 @@
+#GPOPS Log Files:
+*.OPTinfo.txt
+
+# GPOPS auto derivative files
+*ADiGatorGrd.*
+
+# matlab autosave
+*.m~

@@ -3,7 +3,7 @@
 % This script runs trajectory optimization using orthogonal collocation
 
 % Number of points for initialization:
-config.grid.nTrajPts = 11;
+config.grid.nTrajPts = 9;
 
 % Options for nlp solver (fmincon)
 config.options.nlp = optimset(...
@@ -28,3 +28,11 @@ traj = orthogonalCollocation(config);
 
 % Plot the results:
 figure(101); clf; plotTraj(traj,config);
+
+% Animation:
+P.plotFunc = @(t,z)( drawCartPole(t,z,config.dyn) );
+P.speed = 1.0;
+P.figNum = 102;
+t = linspace(traj.time(1),traj.time(end),150);
+z = traj.interp.state(t);
+animate(t,z,P)
