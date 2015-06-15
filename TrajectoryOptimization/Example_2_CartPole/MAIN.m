@@ -31,8 +31,8 @@ figure(101); clf; plotTraj(traj,config);
 
 % Animation:
 P.plotFunc = @(t,z)( drawCartPole(t,z,config.dyn) );
-P.speed = 1.0;
+P.speed = 0.7;
 P.figNum = 102;
-t = linspace(traj.time(1),traj.time(end),150);
+t = linspace(traj.time(1),traj.time(end),250);
 z = traj.interp.state(t);
 animate(t,z,P)
