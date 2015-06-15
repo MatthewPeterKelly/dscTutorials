@@ -23,7 +23,7 @@ bounds.state.lower = [-2*l; -2*pi; -10*l/wn; -10*pi/wn];
 bounds.state.upper = [2*l; 2*pi; 10*l/wn; 10*pi/wn];
 
 % Bounds on control:
-bounds.control.lower = -4*m1*g;
-bounds.control.upper = 4*m1*g;
+bounds.control.lower = -5*m1*g;
+bounds.control.upper = 5*m1*g;
 
 end

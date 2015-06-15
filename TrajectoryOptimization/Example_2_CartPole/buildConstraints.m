@@ -1,7 +1,7 @@
 function [problem, pack] = buildConstraints(guess,config)
 
 % Pack up guess:
-[zGuess,pack] = packDecVar(guess.duration,guess.state,guess.control);
+[zGuess,pack] = packDecVar(guess.time(end),guess.state,guess.control);
 nDecVar = length(zGuess);
 
 %%%% Build linear constraints:

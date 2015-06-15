@@ -56,23 +56,8 @@ qRef = zRef(1:2,:);
 dqRef = zRef(3:4,:);
 ddqRef = dzRef(3:4,:);
 
-% Trajectories: measurement and phase vs time:
-hRef = ref.H*qRef;   % Target measurement
-dhRef = ref.H*dqRef;
-ddhRef = ref.H*ddqRef;
-pRef = ref.c*qRef; % Phase
-dpRef = ref.c*dqRef;
-ddpRef = ref.c*ddqRef;
-
-% Compute derivatives wrt phase using chain rule:
-dhRefdp = dhRef./dpRef;
-ddhRefddp = (ddhRef - dhRefdp.*ddpRef)./(dpRef.^2);
-
-% Represent trajectories as piecewise-polynomial
-ref.pp.h = pchip(pRef,hRef);
-ref.pp.dh = pchip(pRef,dhRefdp);
-ref.pp.dhdt = pchip(pRef,dhRef);
-ref.pp.ddh = pchip(pRef,ddhRefddp);
+% Compute the trajectories and save as piecewise-polynomial splines
+ref = buildRefTraj(qRef,dqRef,ddqRef,ref);
 
 
 % Check math using finite differences:

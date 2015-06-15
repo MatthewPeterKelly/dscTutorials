@@ -8,14 +8,16 @@ dq2 = z(4);
 q = [q1;q2];
 dq = [dq1;dq2];
 
-% Compute reference trajectories:
+% Compute reference trajectories in phase:
 p = ref.c*q;
 hRef = ppval(ref.pp.h, p);
 dhRef = ppval(ref.pp.dh, p);
-dhRefdt = ppval(ref.pp.dhdt , p);
 ddhRef = ppval(ref.pp.ddh, p);
 h = ref.H*q;
 dhdt = ref.H*dq;
+
+% Compute reference trajectory for velocity:
+dhRefdt = ppval(ref.pp.dhdt , p);
 
 % Linear controller:
 kp = ref.wn^2;

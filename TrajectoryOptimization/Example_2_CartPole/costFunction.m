@@ -1,9 +1,4 @@
-function cost = costFunction(t,x,u)
-% cost = costFunction(x,u,config)
-%
-
-% du = chebyshevDerivative(u,[0,t]);
-% [dz, ddz] = chebyshevDerivative(x(3:4,:),[0,t]);
+function cost = costFunction(x,u)
 
 cost = u.^2;
 % cost = du.^2;

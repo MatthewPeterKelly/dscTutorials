@@ -56,6 +56,6 @@ function cost = costFunctionWrapper(z,pack,w)
 [t,x,u] = unPackDecVar(z,pack);
 
 % Clenshaw-Curtis Quadrature for integral cost function:
-cost = dot(w,costFunction(t,x,u));
+cost = dot(w,costFunction(x,u));
 
 end
