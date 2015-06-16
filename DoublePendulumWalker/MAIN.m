@@ -94,11 +94,11 @@ iphase = 1;
 
 bounds.phase(iphase).control.lower = zeros(1,idx.NUMBER_OF_CONTROLS);
 bounds.phase(iphase).control.lower(idx.HIP) = -1;    %(Nm)
-bounds.phase(iphase).control.lower(idx.ANK) = -0.7;  %(Nm)
+bounds.phase(iphase).control.lower(idx.ANK) = 0.0; %%%%HACK -0.7;  %(Nm)
 
 bounds.phase(iphase).control.upper = zeros(1,idx.NUMBER_OF_CONTROLS);
 bounds.phase(iphase).control.upper(idx.HIP) = 1;     %(Nm)
-bounds.phase(iphase).control.upper(idx.ANK) = 0.7;   %(Nm)
+bounds.phase(iphase).control.upper(idx.ANK) = 0.0; %%%%HACK 0.7;   %(Nm)
 
     %How to weight cost for impulse and continuous?
     %   -> Assume that the impulse is equal to a constant force over a
@@ -113,7 +113,7 @@ bounds.phase(iphase).control.upper(idx.ANK) = 0.7;   %(Nm)
     
 %The only parameter is the pushoff impulse magnitude
 bounds.parameter.lower = 0;
-bounds.parameter.upper = MaxImpulse;
+bounds.parameter.upper =  0.0; %%%%HACK MaxImpulse;
 guess.parameter = 0.5*MaxImpulse;
 auxdata.cost.ImpulseConstant = ImpulseConstant; 
     %Multiply this by impulse^2 to get compatible units for a
