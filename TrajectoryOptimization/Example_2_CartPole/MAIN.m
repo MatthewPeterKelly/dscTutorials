@@ -8,7 +8,7 @@ config.grid.nTrajPts = 15;
 % Options for nlp solver (fmincon)
 config.options.nlp = optimset(...
     'Display','iter',...
-    'MaxIter',100,...
+    'MaxIter',250,...
     'MaxFunEvals',5e4);
 
 % Physical parameters for dynamics
@@ -24,11 +24,8 @@ config.guess = computeGuess(config);
 [config.bounds, config.userData] = computeBounds(config);
 
 %%%% Select method and compute trajectory
-traj = orthogonalCollocation(config);
-% traj = directCollocation1(config);
-
-% Plot the results:
-figure(101); clf; plotTraj(traj,config);
+% traj = orthogonalCollocation(config);
+traj = dirTrans_Trapz(config);
 
 % Animation:
 P.plotFunc = @(t,z)( drawCartPole(t,z,config.dyn) );
@@ -37,3 +34,6 @@ P.figNum = 102;
 t = linspace(traj.time(1),traj.time(end),250);
 z = traj.interp.state(t);
 animate(t,z,P)
+
+% Plot the results:
+figure(101); clf; plotTraj(traj,config);

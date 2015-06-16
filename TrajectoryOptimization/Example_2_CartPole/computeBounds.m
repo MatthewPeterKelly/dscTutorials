@@ -19,8 +19,8 @@ bounds.duration.lower = 0.1*(2*pi*wn);
 bounds.duration.upper = 10*(2*pi*wn);
 
 % Bounds on state:
-bounds.state.lower = [-2*l; -2*pi; -10*l/wn; -10*pi/wn];
-bounds.state.upper = [2*l; 2*pi; 10*l/wn; 10*pi/wn];
+bounds.state.lower = [-1.0*l; -2*pi; -10*l/wn; -10*pi/wn];
+bounds.state.upper = [1.0*l; 2*pi; 10*l/wn; 10*pi/wn];
 
 % Bounds on control:
 bounds.control.lower = -5*m1*g;
