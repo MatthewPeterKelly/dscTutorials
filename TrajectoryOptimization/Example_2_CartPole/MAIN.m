@@ -1,6 +1,9 @@
 % MAIN.m
 %
-% This script runs trajectory optimization using orthogonal collocation
+% This script runs trajectory optimization using either orthogonal
+% collocation or direct transcription (trapazoid).
+clc; clear;
+
 
 % Number of points for initialization:
 config.grid.nTrajPts = 15;
@@ -21,7 +24,11 @@ config.dyn.l = 1;
 config.guess = computeGuess(config);
 
 % Bounds:
-[config.bounds, config.userData] = computeBounds(config);
+config.bounds = computeBounds(config);
+
+% Create function handles to be called by optimization:
+config.function.dynamics = @(t,z,u)( cartPoleDynamics(z,u,config.dyn) );
+config.function.costIntegrand = @(t,z,u)( costFunction(t,z,u) );
 
 %%%% Select method and compute trajectory
 % traj = orthogonalCollocation(config);

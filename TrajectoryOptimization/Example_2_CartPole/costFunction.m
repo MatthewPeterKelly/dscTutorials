@@ -1,4 +1,4 @@
-function cost = costFunction(x,u)
+function cost = costFunction(t,x,u)
 
 cost = u.^2;
 % cost = du.^2;

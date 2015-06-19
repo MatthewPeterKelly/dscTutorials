@@ -20,7 +20,7 @@ problem.nonlcon = @(z)( nonLinCon(z,pack, config) );
 % Post-processing:
 [t,x,u] = unPackDecVar(zSoln,pack);
 
-traj.time = linspace(0,t,n);
+traj.time = linspace(t(1),t(2),n);
 traj.state = x;
 traj.control = u;
 traj.objVal = fSoln;
@@ -40,7 +40,7 @@ function [C, Ceq] = nonLinCon(z,pack,config)
 
 n = pack.nState(2);
 [t,x,u] = unPackDecVar(z,pack);
-dt = t/(n-1);
+dt = (t(2)-t(1))/(n-1);
 
 % Evaluate the dynamics at each collocation point
 dx = cartPoleDynamics(x,[u; zeros(size(u))],config.dyn);  
@@ -53,12 +53,12 @@ intStateCol = x(:,idxUpp)-x(:,idxLow);
 
 % Defect constraint:
 defect = intStateTrap - intStateCol;
+% 
+% % user-defined boundary constraints:
+% [bndIneq, bndEq] = boundaryConstraint(t,x(:,1),x(:,end),config.userData);
 
-% user-defined boundary constraints:
-[bndIneq, bndEq] = boundaryConstraint(t,x(:,1),x(:,end),config.userData);
-
-C = bndIneq;
-Ceq = [reshape(defect,numel(defect),1); bndEq];
+C = [];%bndIneq;
+Ceq = [reshape(defect,numel(defect),1)];% bndEq];
 
 
 end
@@ -69,9 +69,10 @@ function cost = costFunctionWrapper(z,pack)
 [t,x,u] = unPackDecVar(z,pack);
 
 % Trapazoid rule to integrate cost function:
-dc = costFunction(x,u);
+tt = linspace(t(1),t(end),pack.nState(2));  %Time vector
+dc = costFunction(tt,x,u);
 nTime = size(x,2);
-dt = t/(nTime-1);
+dt = (t(2)-t(1))/(nTime-1);
 w = ones(nTime,1); w([1,end]) = 0.5;
 cost = dt*dc*w;
 
