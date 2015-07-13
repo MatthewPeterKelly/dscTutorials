@@ -13,7 +13,8 @@ function animate(t,x,P)
 %       	x = [Nx1] state vector
 %     .speed = scalar multiple of time, for playback speed
 %     .figNum = (optional) figure number for plotting. Default = 1000.
-%     .verbose = set to zero to prevent printing details.
+%     .verbose = set to false to prevent printing details. Default = true;
+%     .targetFrameRate = how many frames to plot per second. Default = 10;
 %
 %OUTPUTS:
 %   Animation based on data in t and x.
@@ -23,7 +24,10 @@ if ~isfield(P,'figNum')
     P.figNum=1000;  %Default to figure 1000
 end
 if ~isfield(P,'verbose')
-    P.verbose = 1;
+    P.verbose = true;
+end
+if ~isfield(P,'frameRate')
+    P.targetFrameRate = 10;
 end
 
 % Common variables:
@@ -31,14 +35,15 @@ IS_PAUSED = false;
 VERBOSE = P.verbose;
 SPEED = P.speed;
 QUIT = false;
-SIM_TIME = 0;
+START_TIME = t(1);
+SIM_TIME = START_TIME;
 
 % Set up the figure, and attach mouse events.
 fig = figure(P.figNum);
 set(fig,'KeyPressFcn',@keyDownListener)
 
 %%%% Set up timing:
-frameRate = 30;  %(frames per second)
+frameRate = P.targetFrameRate;  %(frames per second)
 minPause = 0.001;
 maxPause = 1/frameRate;
 timeBuffer = zeros(1,3);
@@ -95,6 +100,11 @@ end
                     else
                         fprintf(' resumed! \n');
                     end
+                end
+            case 'r'
+                SIM_TIME = START_TIME;
+                if VERBOSE
+                    disp('--> restarting animation');
                 end
             case 'uparrow'
                 SPEED = 2*SPEED;

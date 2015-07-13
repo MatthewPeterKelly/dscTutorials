@@ -29,7 +29,7 @@ u = zeros(size(t));
 
 % Animate the results:
 A.plotFunc = @(t,z)( drawAcrobot(t,z,p) );
-A.speed = 0.5;
+A.speed = 1.0;
 A.figNum = 101;
 animate(t,z,A)
 
