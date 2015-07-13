@@ -3,8 +3,23 @@
 % This script runs a passive simulation of the acrobot, to do a sanity
 % check on the dynamics and plotting routines
 %
+% Things to try:
+%
+% 1) Adjust the parameters and states and see if you can guess what will
+% happen when you run the simulation. What if one mass or length is much
+% bigger than the other? Can you make the system behave like a single 
+% pendulum?
+% 
+% 2) Type:      >> help animate 
+% to see the keyboard commands for controlling the animation. You can use
+% then to see the system in slow motion, pause, or go back in time, to name
+% a few possiblities. This is useful for understanding what the system is
+% doing.
+%
+
 clc; clear;
 
+% Physical parameters
 p.m1 = 10;
 p.m2 = 20;
 p.g = 9; 
@@ -31,6 +46,7 @@ u = zeros(size(t));
 A.plotFunc = @(t,z)( drawAcrobot(t,z,p) );
 A.speed = 1.0;
 A.figNum = 101;
+A.verbose = false;
 animate(t,z,A)
 
 % Plot the results:
