@@ -46,7 +46,7 @@ u = zeros(size(t));
 A.plotFunc = @(t,z)( drawAcrobot(t,z,p) );
 A.speed = 1.0;
 A.figNum = 101;
-A.verbose = false;
+A.verbose = true;
 animate(t,z,A)
 
 % Plot the results:
