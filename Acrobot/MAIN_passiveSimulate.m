@@ -10,7 +10,7 @@ p.m2 = 20;
 p.g = 9;
 p.l1 = 3;
 p.l2 = 5;
-
+ 
 % Initial state:
 q1 = (pi/180)*120;
 q2 = (pi/180)*50;
@@ -29,7 +29,7 @@ u = zeros(size(t));
 
 % Animate the results:
 A.plotFunc = @(t,z)( drawAcrobot(t,z,p) );
-A.speed = 1.0;
+A.speed = 0.5;
 A.figNum = 101;
 animate(t,z,A)
 
