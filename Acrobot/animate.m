@@ -14,10 +14,28 @@ function animate(t,x,P)
 %     .speed = scalar multiple of time, for playback speed
 %     .figNum = (optional) figure number for plotting. Default = 1000.
 %     .verbose = set to false to prevent printing details. Default = true;
-%     .targetFrameRate = how many frames to plot per second. Default = 10;
 %
 %OUTPUTS:
 %   Animation based on data in t and x.
+%
+%NOTES:
+%
+%   Keyboard commands during simulation:
+%
+%       'space' - toggle pause
+%
+%       'r' - reset animation
+%
+%       'uparrow' - go faster
+%
+%       'downarrow' - go slower
+%
+%       'rightarrow' - jump forward by 5 frames
+%
+%       'leftarrow' - jump backward by 5 frames
+%
+%       'esc' - quit animation
+%
 %
 
 if ~isfield(P,'figNum')
@@ -30,7 +48,7 @@ if ~isfield(P,'frameRate')
     P.targetFrameRate = 10;
 end
 
-% Common variables:
+% Animation call-back variables:
 IS_PAUSED = false;
 VERBOSE = P.verbose;
 SPEED = P.speed;
@@ -38,22 +56,13 @@ QUIT = false;
 START_TIME = t(1);
 SIM_TIME = START_TIME;
 
-% Set up the figure, and attach mouse events.
+% Set up the figure, and attach keyboard events.
 fig = figure(P.figNum);
 set(fig,'KeyPressFcn',@keyDownListener)
 
-%%%% Set up timing:
-frameRate = P.targetFrameRate;  %(frames per second)
-minPause = 0.001;
-maxPause = 1/frameRate;
-timeBuffer = zeros(1,3);
-dtReal = 1/frameRate;
-
-tEnd = t(end);
-
 tic;    %Start a timer
 timeBuffer(1:3) = toc;
-while SIM_TIME < tEnd;
+while SIM_TIME < t(end);
     
     %Interpolate to get the new point:
     xNow = interp1(t',x',SIM_TIME,'linear','extrap')';
@@ -61,8 +70,10 @@ while SIM_TIME < tEnd;
     %Call the plot command
     feval(P.plotFunc,SIM_TIME,xNow);
     drawnow;
+    pause(0.005);  
     
     %Set up targets for timing
+    dtReal = 0.5*(timeBuffer(1) - timeBuffer(3));
     if IS_PAUSED
         dtSim = 0;
     else
@@ -70,13 +81,10 @@ while SIM_TIME < tEnd;
     end
     SIM_TIME = SIM_TIME + dtSim;
     
-    %Control the frame rate
+    %Record the frame rate:
     timeBuffer(3) = timeBuffer(2);
     timeBuffer(2) = timeBuffer(1);
     timeBuffer(1) = toc;
-    pauseTime = 2*dtSim - (timeBuffer(1) - timeBuffer(3));
-    pauseTime = min(max(minPause, pauseTime),maxPause);
-    pause(pauseTime);
     
     % Check exit conditions:
     if QUIT
@@ -90,7 +98,7 @@ end
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 
-    function keyDownListener(src,event)
+    function keyDownListener(~,event)
         switch event.Key
             case 'space'
                 IS_PAUSED = ~IS_PAUSED;
