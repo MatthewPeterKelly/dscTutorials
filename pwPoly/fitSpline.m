@@ -6,7 +6,7 @@ function [pp, mse] = fitSpline(tData, xData, tKnot)
 %
 % INPUTS:
 %     tData = [1,nData] = time stamps for data (uniform spacing, monotonic!)
-%     xData = [1,nData] = function value at each time
+%     xData = [nFunc,nData] = function value at each time
 %     tKnot = [1,nKnot] = time for each knot point (monotonic!)
 %  
 %   OUTPUTS:
@@ -17,36 +17,43 @@ function [pp, mse] = fitSpline(tData, xData, tKnot)
 %     tData([1,end]) == tKnot([1,end])    
 %
 
-xGuess = interp1(tData',xData',tKnot');
+nFunc = size(xData,1);
+nKnot = length(tKnot);
 
-vData = diffCenter(xData,mean(diff(tData)));
-vGuess = interp1(tData',vData',tKnot');
+xGuess = interp1(tData',xData',tKnot')';
 
-zGuess = [xGuess;vGuess];
+%Numerically estimate the local slope
+vData = zeros(size(xData));
+for i=1:nFunc
+vData(i,:) = diffCenter(xData(i,:),mean(diff(tData)));
+end
+
+vGuess = interp1(tData',vData',tKnot')';
+zGuess = reshape([xGuess;vGuess],2*nFunc*nKnot,1);
 options = optimoptions('fminunc',...
     'MaxFunEvals',200*length(zGuess),...
     'Display','off',...
     'Algorithm','quasi-newton');
 
-objFun = @(z)checkFit(z,tData,xData,tKnot);
+objFun = @(z)checkFit(z,tData,xData,tKnot,nFunc,nKnot);
 zSoln = fminunc(objFun,zGuess,options);
 
 % Check the solution and return the answer:
-[mse, pp] = checkFit(zSoln,tData,xData,tKnot);
+[mse, pp] = checkFit(zSoln,tData,xData,tKnot,nFunc,nKnot);
 
 end
 
 
 
-function [mse, pp] = checkFit(z,tData,xData,tKnot)
+function [mse, pp] = checkFit(z,tData,xData,tKnot,nFunc,nKnot)
 
-n = length(tKnot);
-xKnot = z(1:n)';
-vKnot = z((n+1):(2*n))';
+zKnot = reshape(z,2*nFunc,nKnot);
+xKnot = zKnot(1:nFunc,:);
+vKnot = zKnot((nFunc+1):end,:);
 
 pp = pwch(tKnot,xKnot,vKnot);
 xFit = ppval(pp,tData);
-mse = mean((xFit-xData).^2);
+mse = sum(mean((xFit-xData).^2));
 
 end
 

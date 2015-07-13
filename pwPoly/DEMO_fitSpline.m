@@ -9,14 +9,22 @@ nKnot = 10;
 
 tData = linspace(tSpan(1),tSpan(2),nData);
 xData = sin(tData);
+yData = cos(tData);
 
 tKnot = linspace(tSpan(1),tSpan(2),nKnot);
 
-pp = fitSpline(tData, xData, tKnot);
+pp = fitSpline(tData, [xData;yData], tKnot);
 
-xSpline = ppval(pp,tData);
+zSpline = ppval(pp,tData);
 
-figure(15); clf; hold on;
+figure(15); clf; 
+
+subplot(2,1,1); hold on;
 plot(tData,xData,'ko')
-plot(tData,xSpline,'b-')
+plot(tData,zSpline(1,:),'b-')
+legend('data','spline');
+
+subplot(2,1,2); hold on;
+plot(tData,yData,'ko')
+plot(tData,zSpline(2,:),'b-')
 legend('data','spline');
