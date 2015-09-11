@@ -11,9 +11,8 @@
 % constraints to it. The basic problem is that there are two strong local
 % minimums in the problem that are undesirable. The first is that all
 % masses are right on top of each other (boring). The second occurs when
-% the  masses are relatively far away, which causes the forces acting on
-% them to be small... enough so that the they are within the tolerances
-% allowed by bvp4c;
+% the  masses are relatively far away, and their motion is slow enough to
+% pass as constant for the constraint tolerance (also boring).
 %
 
 
