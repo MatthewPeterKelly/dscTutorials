@@ -6,6 +6,16 @@
 % The solution to this problem was discovered by Montgomery in
 %
 %
+%
+% BVP4C does not seem to work well for this problem since you cannot apply
+% constraints to it. The basic problem is that there are two strong local
+% minimums in the problem that are undesirable. The first is that all
+% masses are right on top of each other (boring). The second occurs when
+% the  masses are relatively far away, which causes the forces acting on
+% them to be small... enough so that the they are within the tolerances
+% allowed by bvp4c;
+%
+
 
 % Physical Parameters
 P.G = 1.0;   %Gravity Constant
@@ -35,7 +45,7 @@ solnInit.yinit = X0;
 % Options:
 options = bvpset(...
     'RelTol',1e-3,...
-    'AbsTol',1e3,...
+    'AbsTol',1e-3,...
     'Stats','on',...
     'Vectorized', 'on');
 
