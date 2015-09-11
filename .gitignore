@@ -7,9 +7,11 @@
 *.tks
 *.*~
 
-# Matlab automatically generated mex files:
+# Matlab automatically generated files:
 codegen/
 *.mex*
+**/*.*~
+**/*.asv
 
 #GPOPS2 automatically generated info files:
 *IPOPTinfo.txt
