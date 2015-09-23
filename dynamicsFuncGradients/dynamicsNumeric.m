@@ -16,27 +16,9 @@ function [ddq, ddqz] = dynamicsNumeric(q,dq,u)
 
 empty = zeros(size(q(1,:)));  %Stupid hack for vectorization
 [A,B,Az,Bz] = autoGen_dynamicsNumeric(q(1,:),q(2,:),dq(1,:),dq(2,:),u(1,:),u(2,:),u(3,:),empty);
-
-[nq, nt] = size(q);
+nx = size(q,1);
 nu = size(u,1);
-nz = 2*nq+nu; 
-
-ddq = zeros(nq,nt);
-ddqz = zeros(nq,nz,nt);
-
-a = zeros(nq,nq);
-b = zeros(nq,1);
-az = zeros(nq,nq,nz);
-bz = zeros(nq,nz);
-for i=1:nt
-    a(:) = A(:,i);
-    b(:) = B(:,i);
-    ddq(:,i) = a\b;
-    az(:) = Az(:,i);
-    bz(:) = Bz(:,i);
-    for j=1:nz
-        ddqz(:,j,i) = a\(-az(:,:,j)*ddq(:,i) + bz(:,j));
-    end
-end
+nz = 2*nx + nu;
+[ddq, ddqz] = computeGradientOfBackSlash(A,B,Az,Bz,nx,nz);
 
 end

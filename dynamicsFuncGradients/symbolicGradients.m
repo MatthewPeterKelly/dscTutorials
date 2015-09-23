@@ -1,5 +1,5 @@
-function [Az, bz] = symbolicGradients(A,b,q,dq,u)
-% [Az, bz] = symbolicGradients(A,b,q,dq,u)
+function [Az, Bz] = symbolicGradients(A,b,q,dq,u)
+% [Az, Bz] = symbolicGradients(A,b,q,dq,u)
 %
 % This function computes the symbolic gradients of the dynamics of a system
 % in mass matrix form:
@@ -20,7 +20,6 @@ function [Az, bz] = symbolicGradients(A,b,q,dq,u)
 %
 %
 
-
 % DecisionVars:
 z = [q;dq;u];
 
@@ -30,6 +29,6 @@ l = 2*n+m;
 
 % Compute jacobian of mass matrix and generalized forces:
 Az = reshape(jacobian(reshape(A,n*n,1),z),n*n*l,1);
-bz = reshape(jacobian(b,z),n*l,1);
+Bz = reshape(jacobian(b,z),n*l,1);
 
 end

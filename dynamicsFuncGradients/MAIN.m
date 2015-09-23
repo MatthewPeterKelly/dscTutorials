@@ -5,13 +5,17 @@
 % analytic solutions.
 %
 %
+% See derivations in Derive_Equations
+%
+% Core of the gradient of the backslash is from:
+%     http://www.atmos.washington.edu/~dennis/MatrixCalculus.pdf
 
 clc; clear;
 
-N = 1000;
-q = randn(2,1000);
-dq = randn(2,1000);
-u = rand(3,1000);
+N = 100;
+q = randn(2,N);
+dq = randn(2,N);
+u = rand(3,N);
 
 tic
 [A_ddq, A_ddqz]  = dynamicsAnalytic(q,dq,u);
