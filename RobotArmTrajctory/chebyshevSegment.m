@@ -1,15 +1,17 @@
-function [A,b,H,t,D] = chebyshevSegment(n,d,dqMax)
+function S = chebyshevSegment(n,d,dqMax)
 % 
 %
 % This function computes the constraints and objective function for a
 % single segment of a trajectory for the robot arm problem.
 %
 % 
+% INPUTS:
+%   n = number of nodes on the segment
+%   d = [low,upp] = time domain for the segment
+%   dqMax = scalar = maximum absolute joint rate
 %
 % OUTPUTS:
-%   Ax <= b  % Joint rate constraints
-%   x'*H*x   % Quadratic cost matrix
-%   t = time grid points
+%   S = struct with the constraint and objective matricies
 %
 
 % Derivatives
@@ -37,5 +39,13 @@ b = dqMax*ones(2*n,1);
 % min  w*(u^2) = x'*(DDD'*W*DDD);  W = diag(w);
 W = diag(w);
 H = 0.5*(DDD'*W*DDD);   %Minimum Jerk
+
+% Pack up:
+S.A = A;
+S.b = b;
+S.H = H;
+S.t = t';
+S.D = D;
+S.DD = DD;
 
 end
