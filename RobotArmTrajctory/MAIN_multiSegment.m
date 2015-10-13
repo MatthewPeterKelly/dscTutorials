@@ -12,7 +12,7 @@ clear; clc;
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 
 % Joint limits
-qLow = -pi;  
+qLow = -2.5;  
 qUpp = 1.5;
 dqMax = 5;   %Joint speed limit
 
@@ -158,8 +158,6 @@ for i=1:nSegment
     plot(tt,dxx);
 end
 
-
-
 % Labels
 subplot(2,1,1);
 ylabel('angle (rad)')
@@ -167,4 +165,12 @@ title('optimal trajectory')
 subplot(2,1,2);
 ylabel('rate (rad/s)')
 xlabel('time (s)')
+
+% Display error status:
+if exitFlag ~=1
+   subplot(2,1,1); hold on;
+   title('NO SOLUTION FOUND')
+   subplot(2,1,2); hold on;
+   title('NO SOLUTION FOUND')
+end
 
