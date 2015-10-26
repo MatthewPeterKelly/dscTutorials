@@ -16,7 +16,8 @@ if param.clearFigure    %THEN RUNNING ANIMATION
     y = -0.5*Cart_Height;
     w = Cart_Width;
     h = Cart_Height;
-    rectangle('Position',[x,y,w,h],'LineWidth',4);
+    h = rectangle('Position',[x,y,w,h],'LineWidth',4,'Curvature',[0.3,0.3]);
+    set(h,'EdgeColor',[0.1,0.8,0.1])
     
     %Plot Pendulum
     Rod_X = [Cart(1), Bob(1)];
