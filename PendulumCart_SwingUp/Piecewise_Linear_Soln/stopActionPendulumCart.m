@@ -24,15 +24,15 @@ param.clearFigure = false;
 %Pass the trace of the Bob's path to the plotting function.
 nPts = 500;
 traceTime = linspace(t(1),t(end),nPts);
-traceState = interp1(t',Bob',traceTime','Cubic','extrap')';
+traceState = interp1(t',Bob',traceTime','pchip','extrap')';
 param.Bob = traceState;
 
 
 %Plotting:
 clf; 
-nFrames = 25;
+nFrames = 20;
 frameTime = linspace(t(1),t(end),nFrames);
-frameState = interp1(t',x',frameTime','Cubic','extrap')';
+frameState = interp1(t',x',frameTime','pchip','extrap')';
 for i=1:nFrames
    plotPendulumCart(frameTime(i),frameState(:,i),param); 
 end

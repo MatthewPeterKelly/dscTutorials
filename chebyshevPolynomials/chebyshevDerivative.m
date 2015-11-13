@@ -41,7 +41,7 @@ if ~isempty(nPrev)  %Then the function has been called before...
         nPrev == n,...          %Same number of grid points
         nOutPrev == nargout,... %Same number of outputs
         dPrev == d];            %Same domain
-    ReCalculate = ~(sum(Conditions)==0);
+    ReCalculate = ~(sum(Conditions)==4);
 end
 
 if ReCalculate;  %Then at least one condition fails, so we need to
