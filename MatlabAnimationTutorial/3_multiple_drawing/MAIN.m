@@ -4,6 +4,11 @@
 % some initial state. The system is drawn in a sub-plot for nine uniformly
 % spaced states throughout the simulation.
 %
+% In this lesson I've pushed the drawing commands into a function so that
+% we can call them multiple times from a for loop. I've also introduced the
+% concept of interpolating the data to get the position of the system at
+% the desired times.
+%
 
 clc; clear;
 

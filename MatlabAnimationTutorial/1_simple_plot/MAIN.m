@@ -3,6 +3,10 @@
 % This script performs a simulation of the cart as it passively moves from
 % some initial state.
 %
+% The purpose of this lesson is to learn how use ode45 to generate data for
+% a simulation, and then plot the state of the system to see what is going
+% on.
+%
 
 clc; clear;
 

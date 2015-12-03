@@ -71,7 +71,6 @@ while SIM_TIME < t(end);
     %Call the plot command
     feval(P.plotFunc,SIM_TIME,xNow);
     drawnow;
-    pause(0.005);
     
     %Set up targets for timing
     dtReal = 0.5*(timeBuffer(1) - timeBuffer(3));

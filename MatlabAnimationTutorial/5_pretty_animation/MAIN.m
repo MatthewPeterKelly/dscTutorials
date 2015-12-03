@@ -3,11 +3,15 @@
 % This script performs an simulation and animation of a cart-pole as it
 % moves passively along a horizontal track.
 %
-% Graphics improved to include patch objects, rather than simple lines and
-% dots.
+% In this lesson I've moved on to introduce a variety of new drawing
+% commands, including patch and rectangle.
+%
+% Additionally, I've switched to updating object properties on each redraw
+% call, rather than generating new objects each time. This is generally
+% considered good practice, particulary with complicated graphics objects.
 %
 
-clc; clear;
+clc; clear; clear global;
 
 %%%% Initial State
 z0 = [
@@ -67,30 +71,20 @@ figure(2); clf;
 hold on;    %  <-- This is important!
 set(gcf,'DoubleBuffer','on');   % Prevents flickering (maybe??)
 
-cartColor = [0.2, 0.7, 0.2];   % [R, G, B]
-poleColor = [0.3, 0.2, 0.7];
-
-% Draw the rail that the cart-pole travels on
-plot(extents(1:2),[0,0],'k-','LineWidth',2);
-
 % Compute the verticies of a star, just for fun;
-star = getStarVerticies(7,0.5);
-p.star = 0.6*p.r*star;  %Rescale;
-
+star = getStarVerticies(7,0.5);  % 7 verticies, spoke ratio of 0.5
+p.star = 0.6*p.r*star;  %Rescale the star;
 
 time = 0;
-global cartHandle poleHandle bobHandle starHandle
-cartHandle = [];
-poleHandle = [];
-bobHandle = [];
-starHandle = [];
 tic;
 while time < t(end)
     
     % Compute the position of the system at the current real world time
     posDraw = interp1(t',pos',time')';
     
+    % Redraw the image
     drawCartPole(time,posDraw,extents,p);
     
+    % Update current time
     time = toc;
 end

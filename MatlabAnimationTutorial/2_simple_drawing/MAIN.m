@@ -3,6 +3,9 @@
 % This script performs a simulation of the cart as it passively moves from
 % some initial state.
 %
+% In the lesson I've moved the state plotting commands to their own
+% function, and introduced some basic drawing concepts using plot
+%
 
 clc; clear;
 

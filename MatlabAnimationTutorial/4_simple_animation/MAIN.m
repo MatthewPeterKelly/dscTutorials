@@ -3,6 +3,10 @@
 % This script performs an simulation and animation of a cart-pole as it
 % moves passively along a horizontal track.
 %
+% In this lesson we've moved to a real-time animation. The computer plots
+% as fast as it can, then checks how much time has passed, and then plots
+% that state at that new time. This method for plotting will keep track
+% with "real time".
 
 clc; clear;
 
