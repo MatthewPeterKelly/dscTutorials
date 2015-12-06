@@ -4,7 +4,7 @@
 % moves passively along a horizontal track.
 %
 % In this lesson I've removed the "real time" animation and replaced it
-% with a script that generates a GIF instead. 0252
+% with a script that generates a GIF instead. 
 %
 
 clc; clear; clear global;
