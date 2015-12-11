@@ -4,6 +4,3 @@ This directory contains Matlab code to pose and then solve for a minimum-jerk tr
 
 The problem is posed and solved as a quadratic program, using multi-segment Chebyshev orthogonal collocation for transcription.
 
-## Dependencies
-
-The helper-functions for the Chebyshev orthogonal polynomials that I use can be found in `dscTutorials/chebyshevPolynomials/`

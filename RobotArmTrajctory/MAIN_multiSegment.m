@@ -82,7 +82,7 @@ ylabel('rate (rad/s)')
 xlabel('time (s)')
 
 % Display error status:
-if exitFlag ~=1
+if soln.info.exitFlag ~=1
    subplot(2,1,1); hold on;
    title('NO SOLUTION FOUND')
    subplot(2,1,2); hold on;
